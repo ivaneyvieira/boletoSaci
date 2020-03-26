@@ -24,7 +24,9 @@ data class DadosPagador(
   val cep: String,
   val cidade: String,
   val uf: String
-                  ) {
+                       ) {
+  val boletoEmitido
+    get() = nossoNumero > 0
   val descricaoStatus
     get() = when(statusParcela) {
       0    -> "Aberto"
@@ -38,7 +40,8 @@ data class DadosPagador(
   val localDtVencimento
     get() = dtVencimento?.toLocalDate()
   
-  fun buildContrato() = Contrato(storeno, contrno, statusContrato, nome, nossoNumero, documento, endereco, bairro, cep,
+  fun buildContrato() = Contrato(storeno, contrno, statusContrato, nome, nossoNumero, documento,
+                                 endereco, bairro, cep,
                                  cidade, uf)
   
   fun buildPrestacoes() =

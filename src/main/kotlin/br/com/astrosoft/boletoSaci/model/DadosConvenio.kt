@@ -23,14 +23,14 @@ data class DadosConvenio(
   val instrucoes
     get() = arrayOf("APÓS O VENCIMENTO COBRAR JUROS DE $jurosFormatado AO MES",
                     "APÓS 30 DIAS DO VENCIMENTO CONTATE NOSSO",
-                    "SETR D COBRANÇA TELEFONE/WHATSAPP 86 2107-4000")
+                    "SETOR DE COBRANÇA TELEFONE/WHATSAPP 86 2107-4000")
   private val jurosFormatado: String
     get() {
       val format = DecimalFormat("#,##0.00")
       return format.format(jurosMensal)
     }
   val locaisPagamento
-    get() = arrayOf("", "")
+    get() = arrayOf("EM QUALQUER BANCO OU CORRESP. BANCARIO MESMO APOS O VENCIMENTO")
   
   fun buildBeneficiario(nossoNumero : Int) = Beneficiario.novoBeneficiario()
     .comNomeBeneficiario(dadosBeneficiario.nome)
@@ -41,22 +41,24 @@ data class DadosConvenio(
     .comNumeroConvenio(numeroConvenio)
     .comCarteira(carteira)
     .comEndereco(endereco)
-    .comNossoNumero("$nossoNumero".lpad(8,"0"))
-    .comDigitoNossoNumero(digitoNossoNumero)
+    .comNossoNumero("$nossoNumero")
+    .comDigitoNossoNumero(banco.geradorDeDigito
+                            .geraDigitoMod10("$agencia$codigo$carteira$nossoNumero").toString())
     .comDocumento(dadosBeneficiario.documento)
   
   companion object {
     private val dadosBeneficiario = DadosBeneficiario.DADOS_BENEFICIARIO!!
+    private val BANCO_ITAU = Itau()
     val CONVENIO_ITAU = DadosConvenio(agencia = "0344",
                                       digitoAgencia = "",
                                       codigo = "00278",
                                       digitoCodigo = "7",
                                       numeroConvenio = "0",
-                                      carteira = "157",
+                                      carteira = "109",
                                       endereco = dadosBeneficiario.buidendereco(),
-                                      digitoNossoNumero = "1",
-                                      banco = Itau(),
+                                      digitoNossoNumero = "",
+                                      banco = BANCO_ITAU,
                                       dadosBeneficiario = dadosBeneficiario,
-                                      jurosMensal = 7.90)
+                                      jurosMensal = 0.0)
   }
 }

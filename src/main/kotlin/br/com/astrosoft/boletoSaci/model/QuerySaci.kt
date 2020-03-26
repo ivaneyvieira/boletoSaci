@@ -24,9 +24,11 @@ class QuerySaci: QueryDB(driver, url, username, password) {
   fun proximoNumero(): Int {
     val sql = "/sql/proximoNumero.sql"
     return query(sql) {q ->
-      q.executeScalarList(Int::class.java)
+      val numero = q.executeScalarList(Int::class.java)
         .firstOrNull() ?: 10000000
-    }
+      if(numero == 0) 10000000
+      else numero
+    } + 1
   }
   
   fun localizaContratos(codigo: Int, documento : String): List<DadosContratos> {

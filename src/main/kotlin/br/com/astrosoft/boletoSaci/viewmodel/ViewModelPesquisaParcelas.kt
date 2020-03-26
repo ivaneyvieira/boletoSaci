@@ -1,5 +1,6 @@
 package br.com.astrosoft.boletoSaci.viewmodel
 
+import br.com.astrosoft.boletoSaci.model.Contrato
 import br.com.astrosoft.boletoSaci.model.DadosContratos
 import br.com.astrosoft.boletoSaci.model.DadosPagador
 import br.com.astrosoft.boletoSaci.model.saci
@@ -16,12 +17,23 @@ class ViewModelPesquisaParcelas (view: IViewPesquisaParcelas): ViewModel<IViewPe
       contrato.parcelas
     }
     view.updateCliente(parcelas)
+    parcelas.ifEmpty {
+      view.showError("Não foram encontrados parcelas")
+    }
+  }
+  
+  fun processaParcelas() {
+  val parcelas = view.parcelasSelecionadas
+    val contratos = DadosPagador.contratosPagador(parcelas)
+    view.imprimeBoletos(contratos)
+    pesquisaCliente()
   }
 }
 
 interface IViewPesquisaParcelas: IView {
   val documento : String
   val codigoCliente : Int
-  
+  val parcelasSelecionadas: List<DadosPagador>
   fun updateCliente(parcelas : List<DadosPagador>)
+  fun imprimeBoletos(contratos: List<Contrato>)
 }

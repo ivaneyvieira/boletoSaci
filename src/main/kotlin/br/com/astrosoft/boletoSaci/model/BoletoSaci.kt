@@ -1,8 +1,11 @@
 package br.com.astrosoft.boletoSaci.model
 
+import br.com.astrosoft.framework.util.SystemUtils
 import br.com.astrosoft.framework.util.mid
 import br.com.caelum.stella.boleto.Boleto
 import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto
+import java.io.FileInputStream
+import java.nio.file.Paths
 
 class BoletoSaci(val contratos: List<Contrato>, val dadosConvenio: DadosConvenio) {
   fun buildBoleto(contrato: Contrato, nossoNumero: Int) = Boleto.novoBoleto()
@@ -29,7 +32,14 @@ class BoletoSaci(val contratos: List<Contrato>, val dadosConvenio: DadosConvenio
       nossoNumero += 1
       boleto
     }
-    return GeradorDeBoleto(* boletos.toTypedArray())
+    return GeradorDeBoleto(template(), mapOf("digitoNossoNumero" to ""),* boletos.toTypedArray())
+  }
+  
+  private fun template() : FileInputStream {
+    val arquivo = "/report/Relatorio/boleto-sem-sacador-avalista.jasper"
+    val resource = SystemUtils::class.java.getResource(arquivo)
+    val path = Paths.get(resource.toURI())
+    return FileInputStream(path.toFile())
   }
   
   fun geraBoleto() = buildGerador().geraPDF()

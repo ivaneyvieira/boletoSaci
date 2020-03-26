@@ -63,6 +63,7 @@ dependencies {
   //implementation("com.flowingcode.addons.applayout:app-layout-addon:3.0.0")
   implementation("com.github.appreciated:app-layout-addon:4.0.0.rc5")
   implementation("org.claspina:confirm-dialog:2.0.0")
+  implementation("org.vaadin.olli:file-download-wrapper:3.0.1")
   //implementation("org.vaadin.alejandro:pdf-browser:2.0.0")
   // https://mvnrepository.com/artifact/br.com.caelum.stella/caelum-stella-boleto
   compile("br.com.caelum.stella:caelum-stella-boleto:2.1.3")
@@ -71,7 +72,6 @@ dependencies {
   implementation("net.sf.jasperreports:jasperreports:6.12.2")
   implementation("net.sourceforge.barbecue:barbecue:1.1")
   implementation("com.lowagie:itext:2.1.7")
-  
   //Util
   implementation("org.sql2o:sql2o:1.6.0")
   implementation("mysql:mysql-connector-java:5.1.48")
@@ -79,7 +79,6 @@ dependencies {
   implementation("org.imgscalr:imgscalr-lib:4.2")
   implementation("com.jcraft:jsch:0.1.55")
   implementation("org.cups4j:cups4j:0.7.6")
-  
   // heroku app runner
   staging("com.github.jsimone:webapp-runner-main:9.0.27.1")
 }

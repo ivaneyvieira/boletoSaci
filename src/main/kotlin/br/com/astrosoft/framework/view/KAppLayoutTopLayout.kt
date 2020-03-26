@@ -6,7 +6,6 @@ import com.github.appreciated.app.layout.addons.notification.entity.DefaultNotif
 import com.github.appreciated.app.layout.annotations.Caption
 import com.github.appreciated.app.layout.annotations.Icon
 import com.github.appreciated.app.layout.component.appbar.AppBarBuilder
-import com.github.appreciated.app.layout.component.applayout.AbstractLeftAppLayoutBase
 import com.github.appreciated.app.layout.component.applayout.TopLayouts.Top
 import com.github.appreciated.app.layout.component.builder.AppLayoutBuilder
 import com.github.appreciated.app.layout.component.menu.top.TopMenuComponent
@@ -44,7 +43,6 @@ open class KAppLayoutTopLayout(): AppLayoutRouterLayout<Top?>() {
     init(appLayout)
     appLayout.isUpNavigationEnabled = true
     appLayout.showUpNavigation(true)
-    (appLayout as? AbstractLeftAppLayoutBase)?.isMenuVisible = true
     return appLayout
   }
   

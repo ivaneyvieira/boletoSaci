@@ -9,6 +9,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.ColumnTextAlign.START
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.LocalDateRenderer
@@ -94,6 +95,21 @@ fun <T> (@VaadinDsl Grid<T>).addColumnString(
   val column = this.addColumnFor(property, block = block)
   column.isAutoWidth = true
   column.left()
+  return column
+}
+
+fun <T> (@VaadinDsl Grid<T>).addColumnBool(
+  property: KProperty1<T, Boolean?>,
+  block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
+                                          ): Grid.Column<T> {
+  val column = this.addComponentColumn {bean ->
+    val boleanValue = property.get(bean) ?: false
+    if(boleanValue) VaadinIcon.CHECK_CIRCLE_O.create()
+    else VaadinIcon.CIRCLE_THIN.create()
+  }
+  column.block()
+  column.isAutoWidth = true
+  column.center()
   return column
 }
 

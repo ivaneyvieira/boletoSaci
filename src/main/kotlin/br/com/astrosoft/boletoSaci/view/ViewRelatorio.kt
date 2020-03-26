@@ -2,6 +2,7 @@ package br.com.astrosoft.boletoSaci.view
 
 import br.com.astrosoft.boletoSaci.viewmodel.IViewRelatorio
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelRelatorio
+import br.com.astrosoft.framework.view.ConverteByte
 import br.com.astrosoft.framework.view.PDFViewer
 import br.com.astrosoft.framework.view.ViewLayout
 import com.github.appreciated.app.layout.annotations.Caption
@@ -66,7 +67,7 @@ class ViewRelatorio: IViewRelatorio, ViewLayout<ViewModelRelatorio>() {
   
   override fun updateBoleto(bytesBoletos: ByteArray) {
     areaView.removeAll()
-    val timeNumber = LocalTime.now().nano
+    val timeNumber =  System.currentTimeMillis()
     val resource = StreamResource("$timeNumber.pdf", ConverteByte(bytesBoletos))
     val pdfView = PDFViewer(resource)
     areaView.addAndExpand(pdfView)
@@ -74,8 +75,3 @@ class ViewRelatorio: IViewRelatorio, ViewLayout<ViewModelRelatorio>() {
 
 }
 
-class ConverteByte(val bytesBoletos: ByteArray) : InputStreamFactory {
-  override fun createInputStream(): InputStream {
-    return ByteArrayInputStream(bytesBoletos)
-  }
-}
