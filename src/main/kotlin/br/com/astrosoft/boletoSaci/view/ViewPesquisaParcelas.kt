@@ -1,6 +1,5 @@
 package br.com.astrosoft.boletoSaci.view
 
-import br.com.astrosoft.boletoSaci.model.Contrato
 import br.com.astrosoft.boletoSaci.model.DadosPagador
 import br.com.astrosoft.boletoSaci.viewmodel.IViewPesquisaParcelas
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelPesquisaParcelas
@@ -15,14 +14,11 @@ import br.com.caelum.stella.format.CPFFormatter
 import com.github.appreciated.app.layout.annotations.Caption
 import com.github.appreciated.app.layout.annotations.Icon
 import com.github.mvysny.karibudsl.v10.button
-import com.github.mvysny.karibudsl.v10.flexGrow
-import com.github.mvysny.karibudsl.v10.flexShrink
-import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.grid
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
+import com.github.mvysny.karibudsl.v10.navigateToView
 import com.github.mvysny.karibudsl.v10.onLeftClick
-import com.github.mvysny.karibudsl.v10.responsiveSteps
 import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.tooltip
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY
@@ -119,7 +115,7 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
       addColumnString(DadosPagador::descricaoStatus) {
         setHeader("Situação")
       }
-      addColumnBool(DadosPagador::boletoEmitido){
+      addColumnBool(DadosPagador::boletoEmitido) {
         setHeader("Boleto Emitido")
       }
       this.setClassNameGenerator {
@@ -139,6 +135,10 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
         naoSelecionado.forEach {
           selectionModel.deselect(it)
         }
+      }
+      
+      this.columns.forEach {
+        it.isSortable = false
       }
     }
   }
@@ -175,7 +175,7 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
     setValorTotal(0.00)
   }
   
-  override fun imprimeBoletos(contratos: List<Contrato>) {
+  override fun imprimeBoletos(contratos: List<DadosPagador>) {
     ViewBoletoHelp.showBoleto(contratos)
   }
   
@@ -184,5 +184,11 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
     lblValorTotal.value = decimalFormat.format(valor)
   }
   
-  private fun DadosPagador.podeSelecionar() = this.statusParcela == 0
+  private fun DadosPagador.podeSelecionar() = this.statusParcela in listOf(0, 2, 3, 4)
+  
+  companion object {
+    fun navigate() {
+      navigateToView(ViewPesquisaParcelas::class)
+    }
+  }
 }

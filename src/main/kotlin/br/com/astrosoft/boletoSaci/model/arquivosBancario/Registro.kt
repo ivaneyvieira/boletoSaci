@@ -10,31 +10,45 @@ class Registro<B> {
     block()
   }
   
-  private fun pos(): Int = fields.sumBy {it.len} + 1
+  private fun nextPos(): Int = fields.sumBy {it.len} + 1
   
-  fun alpha(len: Int, property: KProperty1<B, String>) {
-    fields += FieldAlfanumerico(pos(), len, property)
+  fun alpha(pos: Int, len: Int, property: KProperty1<B, String>) {
+    validaPos(pos, property)
+    fields += FieldAlfanumerico(pos, len, property)
   }
   
-  fun number(len: Int, property: KProperty1<B, Long>) {
-    fields += FieldNumber(pos(), len, property)
+  private fun validaPos(pos: Int, property: KProperty1<*, *>) {
+    if(pos != nextPos())
+      print("######### Erro ${property.name} posicao $pos <> ${nextPos()}")
   }
   
-  fun money(len: Int, property: KProperty1<B, Double>) {
-    fields += FieldDouble(pos(), len, 2, property)
+  fun number(pos: Int, len: Int, property: KProperty1<B, Long>) {
+    validaPos(pos, property)
+    fields += FieldNumber(pos, len, property)
   }
   
-  fun quant(len: Int, property: KProperty1<B, Double>) {
-    fields += FieldDouble(pos(), len, 4, property)
+  fun money(pos: Int, len: Int, property: KProperty1<B, Double>) {
+    validaPos(pos, property)
+    fields += FieldDouble(pos, len, 2, property)
   }
   
-  fun date(property: KProperty1<B, LocalDate?>) {
-    fields += FieldDate(pos(), property)
+  fun quant(pos: Int, len: Int, property: KProperty1<B, Double>) {
+    validaPos(pos, property)
+    fields += FieldDouble(pos, len, 4, property)
+  }
+  
+  fun date(pos: Int, property: KProperty1<B, LocalDate?>) {
+    validaPos(pos, property)
+    fields += FieldDate(pos, property)
   }
   
   fun line(bean: B): String {
     return fields.joinToString(separator = "") {field ->
-      field.line(bean)
+      val value = field.line(bean)
+      val len = field.len
+      if(len != value.length)
+        print("#### Erro ${field.property.name} $len <> ${value.length} $value")
+      value
     }
   }
 }

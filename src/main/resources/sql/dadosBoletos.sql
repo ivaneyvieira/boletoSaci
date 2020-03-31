@@ -21,5 +21,4 @@ FROM sqldados.itxa AS P
                USING (storeno, contrno)
   INNER JOIN custp AS CT
                ON I.custno = CT.no
-WHERE P.storeno = :loja
-  AND P.contrno = :contrato
+WHERE P.l4 <> 0

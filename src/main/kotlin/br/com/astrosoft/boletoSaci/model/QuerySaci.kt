@@ -13,6 +13,13 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
+  fun dadosBoletos(): List<DadosPagador> {
+    val sql = "/sql/dadosBoletos.sql"
+    return query(sql) {q ->
+      q.executeAndFetch(DadosPagador::class.java)
+    }
+  }
+  
   fun dadosBeneficiario(): DadosBeneficiario? {
     val sql = "/sql/dadosBeneficiario.sql"
     return query(sql) {q ->
@@ -40,13 +47,14 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun updateBoleto(loja: Int, contrato: Int, parcela: Int, nossoNumero: Int) {
-    val sql = "/sql/novoBoleto.sql"
+  fun updateParcela(loja: Int, contrato: Int, parcela: Int, nossoNumero: Int, processado : Boolean) {
+    val sql = "/sql/updateParcela.sql"
     script(sql) {q ->
       q.addParameter("loja", loja)
       q.addParameter("contrato", contrato)
       q.addParameter("parcela", parcela)
       q.addParameter("nossoNumero", nossoNumero)
+      q.addParameter("processado", processado)
       q.executeUpdate()
     }
   }

@@ -13,17 +13,19 @@ data class DadosPagador(
   val instno: Int,
   val statusParcela: Int,
   val statusContrato: Int,
-  val nossoNumero: Int,
+  var nossoNumero: Int,
   val valorParcela: Double,
   val valorJuros: Double,
   val dtVencimento: Date,
+  val codigo: Int,
   val nome: String,
   val documento: String,
   val endereco: String,
   val bairro: String,
   val cep: String,
   val cidade: String,
-  val uf: String
+  val uf: String,
+  val processado: Boolean
                        ) {
   val boletoEmitido
     get() = nossoNumero > 0
@@ -38,62 +40,7 @@ data class DadosPagador(
       else -> ""
     }
   val localDtVencimento
-    get() = dtVencimento?.toLocalDate()
-  
-  fun buildContrato() = Contrato(storeno, contrno, statusContrato, nome, nossoNumero, documento,
-                                 endereco, bairro, cep,
-                                 cidade, uf)
-  
-  fun buildPrestacoes() =
-    Prestacao(storeno, contrno, instno, statusParcela, valorParcela, valorJuros, dtVencimento.toLocalDate())
-  
-  companion object {
-    fun contratosPagador(pagamentos: List<DadosPagador>): List<Contrato> {
-      val contratos = pagamentos.groupBy {dados ->
-        dados.buildContrato()
-      }
-      return contratos.map {(contrato, prestacoes) ->
-        contrato.apply {
-          this.prestacoes = prestacoes.map {dados ->
-            dados.buildPrestacoes()
-          }
-        }
-      }
-    }
-  }
-}
-
-data class Contrato(
-  val storeno: Int,
-  val contrno: Int,
-  val statusContrato: Int,
-  val nome: String,
-  val nossoNumero: Int,
-  val documento: String,
-  val endereco: String,
-  val bairro: String,
-  val cep: String,
-  val cidade: String,
-  val uf: String
-                   ) {
-  var prestacoes: List<Prestacao> = emptyList()
-  val dtVencimento
-    get() = prestacoes.map {it.dtVencimento}
-      .filterNotNull()
-      .min()
-  val valorParcela
-    get() = prestacoes.map {it.valorParcela}
-      .sum()
-  val numeroDocumento
-    get() = "$contrno"
-  
-  fun buildDatas() = Datas.novasDatas()
-    .comDocumento(LocalDate.now()
-                    .toCalendar())
-    .comProcessamento(LocalDate.now()
-                        .toCalendar())
-    .comVencimento(dtVencimento?.toCalendar())
-  
+    get() = dtVencimento.toLocalDate()
   val enderecoPagador: Endereco
     get() = Endereco.novoEndereco()
       .comLogradouro(endereco)
@@ -107,21 +54,46 @@ data class Contrato(
     .comDocumento(documento)
     .comEndereco(enderecoPagador)
   
-  private fun LocalDate.toCalendar(): Calendar? {
+  private fun LocalDate?.toCalendar(): Calendar? {
+    this ?: return null
     val calendar = Calendar.getInstance()
     calendar.clear()
     
     calendar.set(this.year, this.monthValue - 1, this.dayOfMonth)
     return calendar
   }
+  
+  val numeroDocumento
+    get() = "$contrno"
+  
+  fun buildDatas() = Datas.novasDatas()
+    .comDocumento(LocalDate.now()
+                    .toCalendar())
+    .comProcessamento(LocalDate.now()
+                        .toCalendar())
+    .comVencimento(localDtVencimento.toCalendar())
+  
+  val isExpired
+    get() = localDtVencimento?.isBefore(LocalDate.now()) ?: true
+  
+  fun updateNossoNumero(): Int {
+    val novoNossoNumero = saci.proximoNumero()
+    saci.updateParcela(loja = storeno,
+                       contrato = contrno,
+                       parcela = instno,
+                       nossoNumero = novoNossoNumero,
+                       processado = false)
+    nossoNumero = novoNossoNumero
+    return novoNossoNumero
+  }
+  
+  fun updateProcessamento(): Int {
+    if(boletoEmitido)
+      saci.updateParcela(loja = storeno,
+                         contrato = contrno,
+                         parcela = instno,
+                         nossoNumero = nossoNumero,
+                         processado = true)
+    return nossoNumero
+  }
 }
-
-data class Prestacao(
-  val storeno: Int,
-  val contrno: Int,
-  val instno: Int,
-  val statusParcela: Int,
-  val valorParcela: Double,
-  val valorJuros: Double,
-  val dtVencimento: LocalDate?
-                    )

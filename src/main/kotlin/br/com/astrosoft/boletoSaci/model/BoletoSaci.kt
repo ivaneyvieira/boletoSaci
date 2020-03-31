@@ -7,8 +7,8 @@ import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto
 import java.io.FileInputStream
 import java.nio.file.Paths
 
-class BoletoSaci(val contratos: List<Contrato>, val dadosConvenio: DadosConvenio) {
-  fun buildBoleto(contrato: Contrato, nossoNumero: Int) = Boleto.novoBoleto()
+class BoletoSaci(val listDadosPagador: List<DadosPagador>, val dadosConvenio: DadosConvenio) {
+  fun buildBoleto(contrato: DadosPagador, nossoNumero: Int) = Boleto.novoBoleto()
     .comDatas(contrato.buildDatas())
     .comBanco(dadosConvenio.banco)
     .comBeneficiario(dadosConvenio.buildBeneficiario(nossoNumero))
@@ -20,22 +20,29 @@ class BoletoSaci(val contratos: List<Contrato>, val dadosConvenio: DadosConvenio
     .comNumeroDoDocumento(contrato.numeroDocumento)
   
   fun buildGerador(): GeradorDeBoleto {
-    var nossoNumero = saci.proximoNumero()
-    val boletos = contratos.map {contrato ->
-      val boleto = buildBoleto(contrato, nossoNumero)
-      contrato.prestacoes.forEach {parcela ->
-        saci.updateBoleto(loja = contrato.storeno,
-                          contrato = contrato.contrno,
-                          parcela = parcela.instno,
-                          nossoNumero = nossoNumero)
-      }
-      nossoNumero += 1
-      boleto
-    }
-    return GeradorDeBoleto(template(), mapOf("digitoNossoNumero" to ""),* boletos.toTypedArray())
+    val boletos = buildListBoleto()
+    return GeradorDeBoleto(template(), mapOf("digitoNossoNumero" to ""), * boletos.toTypedArray())
   }
   
-  private fun template() : FileInputStream {
+  fun buildListBoleto(): List<Boleto> {
+    return listDadosPagador.map {dadosPagador ->
+      buildBoleto(dadosPagador)
+    }
+  }
+  
+  fun buildBoleto(dadosPagador: DadosPagador): Boleto {
+    val nossoNumero = updateBoleto(dadosPagador)
+    return buildBoleto(dadosPagador, nossoNumero)
+  }
+  
+  fun updateBoleto(dadosPagador: DadosPagador): Int {
+    return when {
+      dadosPagador.boletoEmitido -> dadosPagador.nossoNumero
+      else                       -> dadosPagador.updateNossoNumero()
+    }
+  }
+  
+  private fun template(): FileInputStream {
     val arquivo = "/report/Relatorio/boleto-sem-sacador-avalista.jasper"
     val resource = SystemUtils::class.java.getResource(arquivo)
     val path = Paths.get(resource.toURI())

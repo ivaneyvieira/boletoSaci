@@ -1,8 +1,6 @@
 package br.com.astrosoft.boletoSaci.view
 
 import br.com.astrosoft.framework.view.KAppLayoutLeftLayout
-import br.com.astrosoft.framework.view.KAppLayoutTopLayout
-import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
@@ -21,7 +19,7 @@ class MainAppLayout: KAppLayoutLeftLayout(), BeforeEnterObserver {
       bar()
       menu("Menu", "1.0") {
         section("Boleto") {
-          itemMenu(ViewRelatorio::class)
+          itemMenu(ViewBoletos::class)
           itemMenu(ViewPesquisaParcelas::class)
         }
       }
@@ -30,6 +28,6 @@ class MainAppLayout: KAppLayoutLeftLayout(), BeforeEnterObserver {
   
   override fun beforeEnter(event: BeforeEnterEvent?) {
     if(event?.navigationTarget == ViewEmpty::class.java)
-      event.forwardTo(ViewPesquisaParcelas::class.java)
+      event.forwardTo(ViewBoletos::class.java)
   }
 }

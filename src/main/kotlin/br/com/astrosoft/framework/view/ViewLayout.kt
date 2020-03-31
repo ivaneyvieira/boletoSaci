@@ -92,9 +92,10 @@ fun <T> (@VaadinDsl Grid<T>).addColumnString(
   property: KProperty1<T, String?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                             ): Grid.Column<T> {
-  val column = this.addColumnFor(property, block = block)
+  val column = this.addColumnFor(property)
   column.isAutoWidth = true
   column.left()
+  column.block()
   return column
 }
 
@@ -107,9 +108,9 @@ fun <T> (@VaadinDsl Grid<T>).addColumnBool(
     if(boleanValue) VaadinIcon.CHECK_CIRCLE_O.create()
     else VaadinIcon.CIRCLE_THIN.create()
   }
-  column.block()
   column.isAutoWidth = true
   column.center()
+  column.block()
   return column
 }
 
@@ -118,10 +119,10 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDate(
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
   val column = this.addColumnFor(property,
-                                 renderer = LocalDateRenderer(property, "dd/MM/yyyy"),
-                                 block = block)
+                                 renderer = LocalDateRenderer(property, "dd/MM/yyyy"))
   column.isAutoWidth = true
   column.left()
+  column.block()
   return column
 }
 
@@ -132,10 +133,10 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDouble(
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                             ): Grid.Column<T> {
   val column = this.addColumnFor(property,
-                                 renderer = NumberRenderer(property, formatNumber),
-                                 block = block)
+                                 renderer = NumberRenderer(property, formatNumber))
   column.isAutoWidth = true
   column.right()
+  column.block()
   return column
 }
 
@@ -143,9 +144,11 @@ fun <T> (@VaadinDsl Grid<T>).addColumnInt(
   property: KProperty1<T, Int?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                          ): Grid.Column<T> {
-  val column = this.addColumnFor(property, block = block)
+
+  val column = this.addColumnFor(property)
   column.isAutoWidth = true
   column.right()
+  column.block()
   return column
 }
 

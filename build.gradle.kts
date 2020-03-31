@@ -11,6 +11,7 @@ plugins {
 }
 
 defaultTasks("clean", "vaadinBuildFrontend", "build")
+//defaultTasks("clean", "build")
 
 repositories {
   mavenCentral()

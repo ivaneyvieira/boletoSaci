@@ -21,8 +21,6 @@ open class Arquivo<H, D, T> {
     trailer.block()
     return trailer
   }
-  
-
 }
 
 

@@ -13,9 +13,8 @@ class ViewModelRelatorio(view: IViewRelatorio): ViewModel<IViewRelatorio>(view) 
     val loja = view.loja ?: fail("Loja inválida")
     val contrato = view.contrato ?: fail("Contrato Inválido")
     val dadosPagador = saci.dadosPagador(loja, contrato)
-    val contratos = DadosPagador.contratosPagador(dadosPagador)
     val dadosConvenio = DadosConvenio.CONVENIO_ITAU
-    val bytesBoletos = BoletoSaci(contratos, dadosConvenio).geraBoleto()
+    val bytesBoletos = BoletoSaci(dadosPagador, dadosConvenio).geraBoleto()
     view.updateBoleto(bytesBoletos)
   }
 }

@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty1
 
 abstract class Field<B, T>(val pos: Int, val len: Int, val property: KProperty1<B, T?>) {
   fun line(bean: B): String {
-    val value = property.get(bean) ?: return ""
+    val value = property.get(bean)
     return toStr(value)
   }
   
@@ -72,6 +72,7 @@ class FieldDate<B>(pos: Int, property: KProperty1<B, LocalDate?>): Field<B, Loca
   }
   
   override fun toStr(value: LocalDate?): String {
-    return value?.format(formatDate) ?: "000000"
+    value ?: return "000000"
+    return value.format(formatDate)
   }
 }

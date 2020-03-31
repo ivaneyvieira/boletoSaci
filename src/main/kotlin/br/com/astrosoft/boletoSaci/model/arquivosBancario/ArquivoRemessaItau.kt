@@ -12,97 +12,102 @@ import java.time.LocalDateTime
 class ArquivoRemessaItau: Arquivo<HeaderRetorno, DetailRetorno, TrailerRetorno>() {
   init {
     header {
-      number(1, HeaderRetorno::tipoRegistro)
-      number(1, HeaderRetorno::operacao)
-      alpha(7, HeaderRetorno::literalRemessa)
-      number(2, HeaderRetorno::codigoServico)
-      alpha(15, HeaderRetorno::literalServico)
-      number(4, HeaderRetorno::agencia)
-      number(2, HeaderRetorno::zeros)
-      number(5, HeaderRetorno::conta)
-      number(1, HeaderRetorno::dac)
-      alpha(8, HeaderRetorno::brancos1)
-      alpha(30, HeaderRetorno::nomeEmpresa)
-      number(3, HeaderRetorno::codigoBanco)
-      alpha(15, HeaderRetorno::nomeBanco)
-      date(HeaderRetorno::dataGeracao)
-      alpha(294, HeaderRetorno::brancos2)
-      number(6, HeaderRetorno::numeroSequancial)
+      number(1, 1, HeaderRetorno::tipoRegistro)
+      number(2, 1, HeaderRetorno::operacao)
+      alpha(3, 7, HeaderRetorno::literalRemessa)
+      //
+      number(10, 2, HeaderRetorno::codigoServico)
+      alpha(12, 15, HeaderRetorno::literalServico)
+      number(27, 4, HeaderRetorno::agencia)
+      //
+      number(31, 2, HeaderRetorno::zeros)
+      number(33, 5, HeaderRetorno::conta)
+      number(38, 1, HeaderRetorno::dac)
+      //
+      alpha(39, 8, HeaderRetorno::brancos1)
+      alpha(47, 30, HeaderRetorno::nomeEmpresa)
+      number(77, 3, HeaderRetorno::codigoBanco)
+      //
+      alpha(80, 15, HeaderRetorno::nomeBanco)
+      date(95, HeaderRetorno::dataGeracao)
+      alpha(101, 294, HeaderRetorno::brancos2)
+      //
+      number(395, 6, HeaderRetorno::numeroSequancial)
     }
     
     detail {
-      number(1, DetailRetorno::tipoRegistro)
-      number(2, DetailRetorno::codigoInscricao)
-      number(14, DetailRetorno::numeroInscricao)
-      
-      number(4, DetailRetorno::agencia)
-      number(2, DetailRetorno::zeros)
-      number(5, DetailRetorno::conta)
-      
-      number(1, DetailRetorno::dac)
-      alpha(4, DetailRetorno::brancos1)
-      number(4, DetailRetorno::instrucaoAlegacao)
-      
-      alpha(25, DetailRetorno::usoEmpresa)
-      number(8, DetailRetorno::nossoNumero)
-      quant(13, DetailRetorno::qtdeMoeda)
-      
-      number(3, DetailRetorno::numeroCarteira)
-      alpha(21, DetailRetorno::usoBanco)
-      alpha(1, DetailRetorno::carteira)
-      
-      number(2, DetailRetorno::codigoOcorrencia)
-      alpha(10, DetailRetorno::numeroDocumento)
-      date(DetailRetorno::dataVencimento)
-      
-      money(13, DetailRetorno::valorTitulo)
-      number(3, DetailRetorno::codigoBanco)
-      number(5, DetailRetorno::agenciaCobradora)
-      
-      alpha(2, DetailRetorno::especie)
-      alpha(1, DetailRetorno::aceite)
-      date(DetailRetorno::dataEmissao)
-      
-      alpha(2, DetailRetorno::instrucao1)
-      alpha(2, DetailRetorno::instrucao2)
-      money(13, DetailRetorno::juros1Dia)
-      
-      date(DetailRetorno::descontoAte)
-      money(13, DetailRetorno::valorDesconto)
-      money(13, DetailRetorno::valorIOF)
-      
-      money(13, DetailRetorno::abatimento)
-      number(2, DetailRetorno::codigoInscricaoPagador)
-      number(14, DetailRetorno::numeroInscricaoPagador)
-      
-      alpha(30, DetailRetorno::nome)
-      alpha(10, DetailRetorno::brancos2)
-      alpha(40, DetailRetorno::lougadouro)
-      
-      alpha(12, DetailRetorno::bairro)
-      number(8, DetailRetorno::cep)
-      alpha(15, DetailRetorno::cidade)
-      
-      alpha(2, DetailRetorno::estado)
-      alpha(30, DetailRetorno::nomeSacadorAvalista)
-      alpha(4, DetailRetorno::brancos3)
-      
-      date(DetailRetorno::dataMora)
-      number(2, DetailRetorno::prazo)
-      alpha(1, DetailRetorno::brancos4)
-      
-      number(6, DetailRetorno::numeroSequancial)
+      number(1, 1, DetailRetorno::tipoRegistro)
+      number(2, 2, DetailRetorno::codigoInscricao)
+      number(4, 14, DetailRetorno::numeroInscricao)
+      //
+      number(18, 4, DetailRetorno::agencia)
+      number(22, 2, DetailRetorno::zeros)
+      number(24, 5, DetailRetorno::conta)
+      //
+      number(29, 1, DetailRetorno::dac)
+      alpha(30, 4, DetailRetorno::brancos1)
+      number(34, 4, DetailRetorno::instrucaoAlegacao)
+      //
+      alpha(38, 25, DetailRetorno::usoEmpresa)
+      number(63, 8, DetailRetorno::nossoNumero)
+      quant(71, 13, DetailRetorno::qtdeMoeda)
+      //
+      number(84, 3, DetailRetorno::numeroCarteira)
+      alpha(87, 21, DetailRetorno::usoBanco)
+      alpha(108, 1, DetailRetorno::carteira)
+      //
+      number(109, 2, DetailRetorno::codigoOcorrencia)
+      alpha(111, 10, DetailRetorno::numeroDocumento)
+      date(121, DetailRetorno::dataVencimento)
+      //
+      money(127, 13, DetailRetorno::valorTitulo)
+      number(140, 3, DetailRetorno::codigoBanco)
+      number(143, 5, DetailRetorno::agenciaCobradora)
+      //
+      alpha(148, 2, DetailRetorno::especie)
+      alpha(150, 1, DetailRetorno::aceite)
+      date(151, DetailRetorno::dataEmissao)
+      //
+      alpha(157, 2, DetailRetorno::instrucao1)
+      alpha(159, 2, DetailRetorno::instrucao2)
+      money(161, 13, DetailRetorno::juros1Dia)
+      //
+      date(174, DetailRetorno::descontoAte)
+      money(180, 13, DetailRetorno::valorDesconto)
+      money(193, 13, DetailRetorno::valorIOF)
+      //
+      money(206, 13, DetailRetorno::abatimento)
+      number(219, 2, DetailRetorno::codigoInscricaoPagador)
+      number(221, 14, DetailRetorno::numeroInscricaoPagador)
+      //
+      alpha(235, 30, DetailRetorno::nome)
+      alpha(265, 10, DetailRetorno::brancos2)
+      alpha(275, 40, DetailRetorno::lougadouro)
+      //
+      alpha(315, 12, DetailRetorno::bairro)
+      number(327, 8, DetailRetorno::cep)
+      alpha(335, 15, DetailRetorno::cidade)
+      //
+      alpha(350, 2, DetailRetorno::estado)
+      alpha(352, 30, DetailRetorno::nomeSacadorAvalista)
+      alpha(382, 4, DetailRetorno::brancos3)
+      //
+      date(386, DetailRetorno::dataMora)
+      number(392, 2, DetailRetorno::prazo)
+      alpha(394, 1, DetailRetorno::brancos4)
+      //
+      number(395, 6, DetailRetorno::numeroSequancial)
     }
     
     trailer {
-      number(1, TrailerRetorno::tipoRegistro)
-      alpha(393, TrailerRetorno::brancos)
-      number(6, TrailerRetorno::numeroSequancial)
+      number(1, 1, TrailerRetorno::tipoRegistro)
+      alpha(2, 393, TrailerRetorno::brancos)
+      number(395, 6, TrailerRetorno::numeroSequancial)
     }
   }
   
   fun buildFile(boletos: List<Boleto>): List<String> {
-    var sequencia = 0L
+    var sequencia = 1L
     val linhas = mutableListOf<String>()
     val boleto = boletos.firstOrNull() ?: return emptyList()
     linhas += header.line(HeaderRetorno(sequencia++))
@@ -140,7 +145,7 @@ class HeaderRetorno(private val sequencia: Long) {
   val codigoBanco = banco.numeroDoBanco.toLongOrNull() ?: 0L
   
   //
-  val nomeBanco: String = banco.nomeDoBanco
+  val nomeBanco: String = "ITAU"
   val dataGeracao: LocalDate = LocalDate.now()
   val brancos2: String = ""
   
