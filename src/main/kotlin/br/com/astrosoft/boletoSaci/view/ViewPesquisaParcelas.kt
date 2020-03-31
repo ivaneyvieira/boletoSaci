@@ -23,7 +23,6 @@ import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.tooltip
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_SUCCESS
-import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
@@ -38,7 +37,7 @@ import java.text.DecimalFormat
 @Route(value = "pesquisa", layout = MainAppLayout::class)
 @Caption("Pesquisa Prestações")
 @Icon(VaadinIcon.FORM)
-@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
+//@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
 class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaParcelas>() {
   private var gridParcelas: Grid<DadosPagador>
   private lateinit var lblValorTotal: TextField

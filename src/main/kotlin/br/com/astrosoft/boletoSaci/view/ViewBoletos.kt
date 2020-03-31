@@ -5,7 +5,6 @@ import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showBoleto
 import br.com.astrosoft.boletoSaci.viewmodel.IViewModelBoletos
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelBoletos
 import br.com.astrosoft.framework.view.ViewLayout
-import br.com.astrosoft.framework.view.addColumnBool
 import br.com.astrosoft.framework.view.addColumnDate
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
@@ -22,7 +21,6 @@ import com.github.mvysny.karibudsl.v10.onLeftClick
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_SUCCESS
-import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon
@@ -36,7 +34,7 @@ import com.vaadin.flow.server.VaadinSession
 @Route(value = "boletos", layout = MainAppLayout::class)
 @Caption("Boletos")
 @Icon(VaadinIcon.BARCODE)
-@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
+//@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
 class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
   private var gridParcelas: Grid<DadosPagador>
   private val dataProviderParcelas = ListDataProvider<DadosPagador>(mutableListOf())
