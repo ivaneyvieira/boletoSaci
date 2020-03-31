@@ -81,7 +81,7 @@ dependencies {
   implementation("com.jcraft:jsch:0.1.55")
   implementation("org.cups4j:cups4j:0.7.6")
   // heroku app runner
-  staging("com.github.jsimone:webapp-runner-main:9.0.27.1")
+  //staging("com.github.jsimone:webapp-runner-main:9.0.27.1")
 }
 
 vaadin {
