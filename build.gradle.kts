@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val vaadinonkotlin_version = "0.8.1"
-val vaadin10_version = "14.1.16"
+val vaadin10_version = "14.1.21"
 
 plugins {
   kotlin("jvm") version "1.3.61"
@@ -35,13 +35,13 @@ dependencies {
   // Vaadin-on-Kotlin dependency, includes Vaadin
   implementation("eu.vaadinonkotlin:vok-framework-v10-vokdb:$vaadinonkotlin_version")
   // Vaadin 14
-  implementation("com.vaadin:vaadin-core:$vaadin10_version") {
-    // Webjars are only needed when running in Vaadin 13 compatibility mode
-    listOf("com.vaadin.webjar", "org.webjars.bowergithub.insites",
-           "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-           "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents")
-      .forEach {exclude(group = it)}
-  }
+  implementation("com.vaadin:vaadin-core:$vaadin10_version") //{
+  // Webjars are only needed when running in Vaadin 13 compatibility mode
+  //    listOf("com.vaadin.webjar", "org.webjars.bowergithub.insites",
+  //           "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
+  //           "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents")
+  //      .forEach {exclude(group = it)}
+  //  }
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
   
   implementation("com.zaxxer:HikariCP:3.4.1")
