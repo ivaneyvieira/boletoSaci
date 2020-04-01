@@ -27,6 +27,8 @@ data class DadosPagador(
   val uf: String,
   val processado: Boolean
                        ) {
+  val chaveERP
+    get() = "$storeno-$contrno-$instno"
   val boletoEmitido
     get() = nossoNumero > 0
   val descricaoStatus

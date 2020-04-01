@@ -1,5 +1,6 @@
 package br.com.astrosoft.boletoSaci.model
 
+import br.com.astrosoft.boletoSaci.model.arquivosBancario.BoletoExt
 import br.com.astrosoft.framework.util.SystemUtils
 import br.com.astrosoft.framework.util.mid
 import br.com.caelum.stella.boleto.Boleto
@@ -20,19 +21,20 @@ class BoletoSaci(val listDadosPagador: List<DadosPagador>, val dadosConvenio: Da
     .comNumeroDoDocumento(contrato.numeroDocumento)
   
   fun buildGerador(): GeradorDeBoleto {
-    val boletos = buildListBoleto()
+    val boletos = buildListBoleto().map {it.boleto}
     return GeradorDeBoleto(template(), mapOf("digitoNossoNumero" to ""), * boletos.toTypedArray())
   }
   
-  fun buildListBoleto(): List<Boleto> {
+  fun buildListBoleto(): List<BoletoExt> {
     return listDadosPagador.map {dadosPagador ->
       buildBoleto(dadosPagador)
     }
   }
   
-  fun buildBoleto(dadosPagador: DadosPagador): Boleto {
+  fun buildBoleto(dadosPagador: DadosPagador): BoletoExt {
     val nossoNumero = updateBoleto(dadosPagador)
-    return buildBoleto(dadosPagador, nossoNumero)
+    val boleto = buildBoleto(dadosPagador, nossoNumero)
+    return BoletoExt(boleto, dadosPagador.chaveERP)
   }
   
   fun updateBoleto(dadosPagador: DadosPagador): Int {

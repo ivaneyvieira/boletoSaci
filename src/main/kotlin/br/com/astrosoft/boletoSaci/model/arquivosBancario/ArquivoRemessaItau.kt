@@ -4,7 +4,9 @@ import br.com.astrosoft.boletoSaci.model.DadosBeneficiario
 import br.com.astrosoft.boletoSaci.model.DadosBeneficiario.Companion.DADOS_BENEFICIARIO
 import br.com.astrosoft.boletoSaci.model.DadosConvenio
 import br.com.astrosoft.boletoSaci.model.DadosConvenio.Companion.CONVENIO_ITAU
+import br.com.astrosoft.framework.util.toLocalDate
 import br.com.caelum.stella.boleto.Boleto
+import br.com.caelum.stella.boleto.Pagador
 import br.com.caelum.stella.boleto.bancos.Bancos
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -106,13 +108,13 @@ class ArquivoRemessaItau: Arquivo<HeaderRetorno, DetailRetorno, TrailerRetorno>(
     }
   }
   
-  fun buildFile(boletos: List<Boleto>): List<String> {
+  fun buildFile(boletos: List<BoletoExt>): List<String> {
     var sequencia = 1L
     val linhas = mutableListOf<String>()
-    val boleto = boletos.firstOrNull() ?: return emptyList()
+    
     linhas += header.line(HeaderRetorno(sequencia++))
-    boletos.forEach {b ->
-      linhas += detail.line(DetailRetorno(sequencia++, b, ""))
+    boletos.forEach {ext ->
+      linhas += detail.line(DetailRetorno(sequencia++, ext.boleto, ext.chaveERP))
     }
     linhas += trailer.line(TrailerRetorno(sequencia))
     return linhas
@@ -156,11 +158,12 @@ class HeaderRetorno(private val sequencia: Long) {
 class DetailRetorno(private val sequencia: Long, private val boleto: Boleto, chaveERP: String) {
   private val banco: Bancos = Bancos.ITAU
   private val beneficiario: DadosBeneficiario = DADOS_BENEFICIARIO!!
+  private val pagador: Pagador = boleto.pagador
   private val convenio: DadosConvenio = CONVENIO_ITAU
   val tipoRegistro = 1L
-  val codigoInscricao = 10L
+  val codigoInscricao = 1L
   val numeroInscricao =
-    beneficiario.documento.replace("/", "")
+    pagador.documento.replace("/", "")
       .replace("-", "")
       .replace(".", "")
       .toLongOrNull() ?: 0L
@@ -190,27 +193,27 @@ class DetailRetorno(private val sequencia: Long, private val boleto: Boleto, cha
   val agenciaCobradora = 0L
   val especie: String = "01"
   val aceite: String = if(boleto.aceite) "S" else "N"
-  val dataEmissao: LocalDate = LocalDateTime.ofInstant(boleto.datas.processamento.toInstant(),
-                                                       boleto.datas.processamento.timeZone
-                                                         .toZoneId())
-    .toLocalDate()
+  val dataEmissao: LocalDate? = boleto.datas.processamento.toLocalDate()
   val instrucao1: String = "03"
   val instrucao2: String = "03"
   val juros1Dia: Double = 0.00
-  val descontoAte: LocalDate = LocalDateTime.ofInstant(boleto.datas.vencimento.toInstant(),
-                                                       boleto.datas.vencimento.timeZone
-                                                         .toZoneId())
-    .toLocalDate()
+  val descontoAte: LocalDate? = null
   val valorDesconto: Double = 0.00
   val valorIOF: Double = 0.00
   val abatimento: Double = 0.00
   val codigoInscricaoPagador = 1L
-  val numeroInscricaoPagador = boleto.pagador.documento.toLongOrNull() ?: 0L
+  val numeroInscricaoPagador =
+    boleto.pagador.documento.replace("/", "")
+      .replace("-", "")
+      .replace(".", "")
+      .toLongOrNull()
   val nome: String = boleto.pagador.nome
   val brancos2: String = ""
   val lougadouro: String = boleto.pagador.endereco.logradouro
   val bairro: String = boleto.pagador.endereco.bairro
-  val cep = boleto.pagador.endereco.cep.toLongOrNull() ?: 0L
+  val cep =
+    boleto.pagador.endereco.cep.replace("-", "")
+      .toLongOrNull()
   val cidade: String = boleto.pagador.endereco.cidade
   val estado: String = boleto.pagador.endereco.uf
   val nomeSacadorAvalista: String = ""

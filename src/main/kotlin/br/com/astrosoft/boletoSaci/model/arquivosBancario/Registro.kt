@@ -22,17 +22,17 @@ class Registro<B> {
       print("######### Erro ${property.name} posicao $pos <> ${nextPos()}")
   }
   
-  fun number(pos: Int, len: Int, property: KProperty1<B, Long>) {
+  fun number(pos: Int, len: Int, property: KProperty1<B, Long?>) {
     validaPos(pos, property)
     fields += FieldNumber(pos, len, property)
   }
   
-  fun money(pos: Int, len: Int, property: KProperty1<B, Double>) {
+  fun money(pos: Int, len: Int, property: KProperty1<B, Double?>) {
     validaPos(pos, property)
     fields += FieldDouble(pos, len, 2, property)
   }
   
-  fun quant(pos: Int, len: Int, property: KProperty1<B, Double>) {
+  fun quant(pos: Int, len: Int, property: KProperty1<B, Double?>) {
     validaPos(pos, property)
     fields += FieldDouble(pos, len, 4, property)
   }

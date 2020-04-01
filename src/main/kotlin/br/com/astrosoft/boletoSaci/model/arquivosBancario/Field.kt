@@ -30,6 +30,7 @@ class FieldAlfanumerico<B>(pos: Int, len: Int, property: KProperty1<B, String>):
   }
   
   override fun toStr(value: String?): String {
+    value ?: return "".rpad(len, "0")
     return value.rpad(len, " ")
   }
 }
@@ -40,6 +41,7 @@ class FieldNumber<B>(pos: Int, len: Int, property: KProperty1<B, Long?>): Field<
   }
   
   override fun toStr(value: Long?): String {
+    value ?: return "".lpad(len, "0")
     return value.toString()
       .lpad(len, "0")
   }
@@ -47,15 +49,16 @@ class FieldNumber<B>(pos: Int, len: Int, property: KProperty1<B, Long?>): Field<
 
 class FieldDouble<B>(pos: Int, len: Int, prec : Int, property: KProperty1<B, Double?>): Field<B, Double>(pos, len,
                                                                                                     property) {
-  val fator = 10.00.pow(prec*1.00)
+  private val fator = 10.00.pow(prec * 1.00)
   override fun toValue(str: String?): Double? {
     return str?.toLong()
       ?.div(fator)
   }
   
   override fun toStr(value: Double?): String {
-    return value?.times(fator)
-      ?.roundToLong()
+    value ?: return "".lpad(len, "0")
+    return value.times(fator)
+      .roundToLong()
       .toString()
       .lpad(len, "0")
   }
@@ -72,7 +75,7 @@ class FieldDate<B>(pos: Int, property: KProperty1<B, LocalDate?>): Field<B, Loca
   }
   
   override fun toStr(value: LocalDate?): String {
-    value ?: return "000000"
+    value ?: return "0".lpad(len, "0")
     return value.format(formatDate)
   }
 }
