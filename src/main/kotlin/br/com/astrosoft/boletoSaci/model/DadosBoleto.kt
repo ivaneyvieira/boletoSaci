@@ -7,7 +7,7 @@ import br.com.caelum.stella.boleto.Pagador
 import java.time.LocalDate
 import java.util.*
 
-data class DadosPagador(
+data class DadosBoleto(
   val storeno: Int,
   val contrno: Int,
   val instno: Int,
@@ -26,7 +26,7 @@ data class DadosPagador(
   val cidade: String,
   val uf: String,
   val processado: Boolean
-                       ) {
+                      ) {
   val chaveERP
     get() = "$storeno-$contrno-$instno"
   val boletoEmitido

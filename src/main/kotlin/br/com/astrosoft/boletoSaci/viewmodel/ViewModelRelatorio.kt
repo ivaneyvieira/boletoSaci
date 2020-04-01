@@ -2,7 +2,6 @@ package br.com.astrosoft.boletoSaci.viewmodel
 
 import br.com.astrosoft.boletoSaci.model.BoletoSaci
 import br.com.astrosoft.boletoSaci.model.DadosConvenio
-import br.com.astrosoft.boletoSaci.model.DadosPagador
 import br.com.astrosoft.boletoSaci.model.saci
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel

@@ -4,19 +4,19 @@ import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
 
 class QuerySaci: QueryDB(driver, url, username, password) {
-  fun dadosPagador(loja: Int, contrato: Int): List<DadosPagador> {
+  fun dadosPagador(loja: Int, contrato: Int): List<DadosBoleto> {
     val sql = "/sql/dadosPagador.sql"
     return query(sql) {q ->
       q.addParameter("loja", loja)
       q.addParameter("contrato", contrato)
-      q.executeAndFetch(DadosPagador::class.java)
+      q.executeAndFetch(DadosBoleto::class.java)
     }
   }
   
-  fun dadosBoletos(): List<DadosPagador> {
+  fun dadosBoletos(): List<DadosBoleto> {
     val sql = "/sql/dadosBoletos.sql"
     return query(sql) {q ->
-      q.executeAndFetch(DadosPagador::class.java)
+      q.executeAndFetch(DadosBoleto::class.java)
     }
   }
   

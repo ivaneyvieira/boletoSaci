@@ -1,6 +1,6 @@
 package br.com.astrosoft.boletoSaci.viewmodel
 
-import br.com.astrosoft.boletoSaci.model.DadosPagador
+import br.com.astrosoft.boletoSaci.model.DadosBoleto
 import br.com.astrosoft.boletoSaci.model.saci
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
@@ -30,7 +30,7 @@ class ViewModelPesquisaParcelas(view: IViewPesquisaParcelas): ViewModel<IViewPes
 interface IViewPesquisaParcelas: IView {
   val documento: String
   val codigoCliente: Int
-  val parcelasSelecionadas: List<DadosPagador>
-  fun updateCliente(parcelas: List<DadosPagador>)
-  fun imprimeBoletos(contratos: List<DadosPagador>)
+  val parcelasSelecionadas: List<DadosBoleto>
+  fun updateCliente(parcelas: List<DadosBoleto>)
+  fun imprimeBoletos(dadosBoletos: List<DadosBoleto>)
 }

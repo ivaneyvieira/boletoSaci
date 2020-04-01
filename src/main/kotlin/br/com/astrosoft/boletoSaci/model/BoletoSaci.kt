@@ -8,17 +8,17 @@ import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto
 import java.io.FileInputStream
 import java.nio.file.Paths
 
-class BoletoSaci(val listDadosPagador: List<DadosPagador>, val dadosConvenio: DadosConvenio) {
-  fun buildBoleto(contrato: DadosPagador, nossoNumero: Int) = Boleto.novoBoleto()
-    .comDatas(contrato.buildDatas())
+class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: DadosConvenio) {
+  fun buildBoleto(dadosBoleto: DadosBoleto, nossoNumero: Int) = Boleto.novoBoleto()
+    .comDatas(dadosBoleto.buildDatas())
     .comBanco(dadosConvenio.banco)
     .comBeneficiario(dadosConvenio.buildBeneficiario(nossoNumero))
     .comInstrucoes(* dadosConvenio.instrucoes)
     .comLocaisDePagamento(* dadosConvenio.locaisPagamento)
-    .comPagador(contrato.buildPagador())
-    .comValorBoleto(contrato.valorParcela)
+    .comPagador(dadosBoleto.buildPagador())
+    .comValorBoleto(dadosBoleto.valorParcela)
     .comEspecieDocumento("DMI")
-    .comNumeroDoDocumento(contrato.numeroDocumento)
+    .comNumeroDoDocumento(dadosBoleto.numeroDocumento)
   
   fun buildGerador(): GeradorDeBoleto {
     val boletos = buildListBoleto().map {it.boleto}
@@ -26,21 +26,21 @@ class BoletoSaci(val listDadosPagador: List<DadosPagador>, val dadosConvenio: Da
   }
   
   fun buildListBoleto(): List<BoletoExt> {
-    return listDadosPagador.map {dadosPagador ->
-      buildBoleto(dadosPagador)
+    return listDadosPagador.map {dadosBoleto ->
+      buildBoleto(dadosBoleto)
     }
   }
   
-  fun buildBoleto(dadosPagador: DadosPagador): BoletoExt {
-    val nossoNumero = updateBoleto(dadosPagador)
-    val boleto = buildBoleto(dadosPagador, nossoNumero)
-    return BoletoExt(boleto, dadosPagador.chaveERP)
+  fun buildBoleto(dadosBoleto: DadosBoleto): BoletoExt {
+    val nossoNumero = updateBoleto(dadosBoleto)
+    val boleto = buildBoleto(dadosBoleto, nossoNumero)
+    return BoletoExt(boleto, dadosBoleto.chaveERP)
   }
   
-  fun updateBoleto(dadosPagador: DadosPagador): Int {
+  fun updateBoleto(dadosBoleto: DadosBoleto): Int {
     return when {
-      dadosPagador.boletoEmitido -> dadosPagador.nossoNumero
-      else                       -> dadosPagador.updateNossoNumero()
+      dadosBoleto.boletoEmitido -> dadosBoleto.nossoNumero
+      else                      -> dadosBoleto.updateNossoNumero()
     }
   }
   

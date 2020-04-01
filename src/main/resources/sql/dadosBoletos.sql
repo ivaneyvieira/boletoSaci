@@ -21,4 +21,4 @@ FROM sqldados.itxa AS P
                USING (storeno, contrno)
   INNER JOIN custp AS CT
                ON I.custno = CT.no
-WHERE P.l4 <> 0
+WHERE P.l4 <> 0 /*Nosso número*/

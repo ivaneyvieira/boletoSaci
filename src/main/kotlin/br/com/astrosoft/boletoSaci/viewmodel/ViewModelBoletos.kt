@@ -1,12 +1,10 @@
 package br.com.astrosoft.boletoSaci.viewmodel
 
-import br.com.astrosoft.boletoSaci.model.BoletoSaci
-import br.com.astrosoft.boletoSaci.model.DadosConvenio
-import br.com.astrosoft.boletoSaci.model.DadosPagador
-import br.com.astrosoft.boletoSaci.model.arquivosBancario.ArquivoRemessaItau
+import br.com.astrosoft.boletoSaci.model.DadosBoleto
 import br.com.astrosoft.boletoSaci.model.saci
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
+import br.com.astrosoft.framework.viewmodel.fail
 
 class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(view) {
   fun adicionarBoleto() {
@@ -14,14 +12,13 @@ class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(vi
   }
   
   fun gerarRemessa() = exec {
-    val dadosPagador = boletosGerados()
-    val dadosConvenio = DadosConvenio.CONVENIO_ITAU
-    val boletosSaci = BoletoSaci(dadosPagador, dadosConvenio)
-    val boletos = boletosSaci.buildListBoleto()
-    val arquivoRemessa = ArquivoRemessaItau()
-    val arquivo = arquivoRemessa.buildFile(boletos)
-    val arquivoStr = arquivo.joinToString(separator = "\r\n")
-    view.openText(arquivoStr)
+    val dadosBoleto = boletosGerados().filter {dados ->
+      !dados.processado
+    }
+    dadosBoleto.ifEmpty {
+      fail("Não há nenhum boleto para processar.")
+    }
+    view.openText(dadosBoleto)
     updateGrid()
   }
   
@@ -29,16 +26,17 @@ class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(vi
     view.updateGrid(boletosGerados())
   }
   
-  fun boletosGerados(): List<DadosPagador> {
-    return saci.dadosBoletos().sortedWith(compareBy(DadosPagador::storeno, DadosPagador::contrno,
-                                                    DadosPagador::instno))
+  fun boletosGerados(): List<DadosBoleto> {
+    return saci.dadosBoletos()
+      .sortedWith(compareBy(DadosBoleto::storeno, DadosBoleto::contrno,
+                            DadosBoleto::instno))
   }
 }
 
 interface IViewModelBoletos: IView {
-  fun updateGrid(list: List<DadosPagador>)
+  fun updateGrid(list: List<DadosBoleto>)
   
   fun openAdicionaParcelas()
   
-  fun openText(arquivoStr: String)
+  fun openText(dadosBoleto: List<DadosBoleto>)
 }

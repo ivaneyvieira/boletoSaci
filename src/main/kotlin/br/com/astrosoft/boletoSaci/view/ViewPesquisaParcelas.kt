@@ -1,6 +1,6 @@
 package br.com.astrosoft.boletoSaci.view
 
-import br.com.astrosoft.boletoSaci.model.DadosPagador
+import br.com.astrosoft.boletoSaci.model.DadosBoleto
 import br.com.astrosoft.boletoSaci.viewmodel.IViewPesquisaParcelas
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelPesquisaParcelas
 import br.com.astrosoft.framework.view.ViewLayout
@@ -39,14 +39,14 @@ import java.text.DecimalFormat
 @Icon(VaadinIcon.FORM)
 //@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
 class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaParcelas>() {
-  private var gridParcelas: Grid<DadosPagador>
+  private var gridParcelas: Grid<DadosBoleto>
   private lateinit var lblValorTotal: TextField
   private lateinit var lblNomeCleinte: TextField
   private val cpfFormater = CPFFormatter()
   private val cnpjFormater = CNPJFormatter()
   private lateinit var edtDoc: TextField
   private lateinit var edtCodigo: TextField
-  private val dataProviderParcelas = ListDataProvider<DadosPagador>(mutableListOf())
+  private val dataProviderParcelas = ListDataProvider<DadosBoleto>(mutableListOf())
   override val viewModel = ViewModelPesquisaParcelas(this)
   
   init {
@@ -95,26 +95,26 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
       isMultiSort = true
       addThemeVariants(LUMO_COMPACT)
       setSelectionMode(SelectionMode.MULTI)
-      
-      addColumnInt(DadosPagador::storeno) {
+  
+      addColumnInt(DadosBoleto::storeno) {
         setHeader("Loja")
       }
-      addColumnInt(DadosPagador::contrno) {
+      addColumnInt(DadosBoleto::contrno) {
         setHeader("Contrato")
       }
-      addColumnInt(DadosPagador::instno) {
+      addColumnInt(DadosBoleto::instno) {
         setHeader("Parcela")
       }
-      addColumnDate(DadosPagador::localDtVencimento) {
+      addColumnDate(DadosBoleto::localDtVencimento) {
         setHeader("Vencimento")
       }
-      addColumnDouble(DadosPagador::valorParcela) {
+      addColumnDouble(DadosBoleto::valorParcela) {
         setHeader("Valor")
       }
-      addColumnString(DadosPagador::descricaoStatus) {
+      addColumnString(DadosBoleto::descricaoStatus) {
         setHeader("Situação")
       }
-      addColumnBool(DadosPagador::boletoEmitido) {
+      addColumnBool(DadosBoleto::boletoEmitido) {
         setHeader("Boleto Emitido")
       }
       this.setClassNameGenerator {
@@ -156,13 +156,13 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
     }
   override val codigoCliente: Int
     get() = edtCodigo.value?.toIntOrNull() ?: 0
-  override val parcelasSelecionadas: List<DadosPagador>
+  override val parcelasSelecionadas: List<DadosBoleto>
     get() = gridParcelas.selectedItems.filter {it.podeSelecionar()}
       .toList()
   
-  override fun updateCliente(parcelas: List<DadosPagador>) {
-    val lista = parcelas.sortedWith(compareBy(DadosPagador::storeno, DadosPagador::contrno,
-                                              DadosPagador::instno))
+  override fun updateCliente(parcelas: List<DadosBoleto>) {
+    val lista = parcelas.sortedWith(compareBy(DadosBoleto::storeno, DadosBoleto::contrno,
+                                              DadosBoleto::instno))
       .distinct()
     val parcela = parcelas.firstOrNull()
     edtDoc.value = documento
@@ -174,8 +174,8 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
     setValorTotal(0.00)
   }
   
-  override fun imprimeBoletos(contratos: List<DadosPagador>) {
-    ViewBoletoHelp.showBoleto(contratos)
+  override fun imprimeBoletos(dadosBoletos: List<DadosBoleto>) {
+    ViewBoletoHelp.showBoleto(dadosBoletos)
   }
   
   private fun setValorTotal(valor: Double) {
@@ -183,7 +183,7 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
     lblValorTotal.value = decimalFormat.format(valor)
   }
   
-  private fun DadosPagador.podeSelecionar() = this.statusParcela in listOf(0, 2, 3, 4)
+  private fun DadosBoleto.podeSelecionar() = this.statusParcela in listOf(0, 2, 3, 4)
   
   companion object {
     fun navigate() {
