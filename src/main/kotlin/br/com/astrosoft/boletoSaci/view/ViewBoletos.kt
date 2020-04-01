@@ -1,6 +1,7 @@
 package br.com.astrosoft.boletoSaci.view
 
-import br.com.astrosoft.boletoSaci.model.DadosPagador
+import br.com.astrosoft.boletoSaci.model.DadosBoleto
+import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showArquivoRemessa
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showBoleto
 import br.com.astrosoft.boletoSaci.viewmodel.IViewModelBoletos
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelBoletos
@@ -9,7 +10,6 @@ import br.com.astrosoft.framework.view.addColumnDate
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnString
-import br.com.astrosoft.framework.view.resource.resourceTxt
 import com.github.appreciated.app.layout.annotations.Caption
 import com.github.appreciated.app.layout.annotations.Icon
 import com.github.mvysny.karibudsl.v10.button
@@ -18,7 +18,7 @@ import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.github.mvysny.karibudsl.v10.navigateToView
 import com.github.mvysny.karibudsl.v10.onLeftClick
-import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_SUCCESS
 import com.vaadin.flow.component.grid.Grid
@@ -29,15 +29,14 @@ import com.vaadin.flow.component.textfield.NumberField
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.value.ValueChangeMode.EAGER
 import com.vaadin.flow.router.Route
-import com.vaadin.flow.server.VaadinSession
 
 @Route(value = "boletos", layout = MainAppLayout::class)
 @Caption("Boletos")
 @Icon(VaadinIcon.BARCODE)
 //@CssImport("frontend://styles/grid.css", themeFor = "vaadin-grid")
 class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
-  private var gridParcelas: Grid<DadosPagador>
-  private val dataProviderParcelas = ListDataProvider<DadosPagador>(mutableListOf())
+  private var gridParcelas: Grid<DadosBoleto>
+  private val dataProviderParcelas = ListDataProvider<DadosBoleto>(mutableListOf())
   override val viewModel = ViewModelBoletos(this)
   
   init {
@@ -76,7 +75,8 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
           val value = event.value?.toInt()
           if(value != null)
             dataProviderParcelas.addFilter {dados ->
-              dados.codigo.toString().startsWith(value.toString())
+              dados.codigo.toString()
+                .startsWith(value.toString())
             }
         }
         this.width = "100px"
@@ -90,7 +90,8 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
           val value = event.value?.toInt()
           if(value != null)
             dataProviderParcelas.addFilter {dados ->
-              dados.contrno.toString().startsWith(value.toString())
+              dados.contrno.toString()
+                .startsWith(value.toString())
             }
         }
         this.width = "150px"
@@ -98,53 +99,67 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
         this.setSizeFull()
         this.placeholder = "Filtro"
       }
-      
-      addColumnInt(DadosPagador::codigo) {
+  
+      addColumnInt(DadosBoleto::codigo) {
         setHeader("Código")
         filterRow.getCell(this)
           .setComponent(edtCodigo)
         isAutoWidth = false
       }
-      addColumnString(DadosPagador::nome) {
+      addColumnString(DadosBoleto::nome) {
         setHeader("Nome")
       }
-      addColumnInt(DadosPagador::storeno) {
+      addColumnInt(DadosBoleto::storeno) {
         setHeader("Lj")
       }
-      addColumnInt(DadosPagador::contrno) {
+      addColumnInt(DadosBoleto::contrno) {
         setHeader("Contrato")
         filterRow.getCell(this)
           .setComponent(edtContrato)
         isAutoWidth = false
       }
-      addColumnInt(DadosPagador::instno) {
+      addColumnInt(DadosBoleto::instno) {
         setHeader("Pr")
       }
-      addColumnDate(DadosPagador::localDtVencimento) {
+      addColumnDate(DadosBoleto::localDtVencimento) {
         setHeader("Vencimento")
       }
-      addColumnDouble(DadosPagador::valorParcela) {
+      addColumnDouble(DadosBoleto::valorParcela) {
         setHeader("Valor")
       }
-      addColumnString(DadosPagador::descricaoStatus) {
+      addColumnString(DadosBoleto::descricaoStatus) {
         setHeader("Situação")
       }
-      addColumnInt(DadosPagador::nossoNumero) {
+      addColumnInt(DadosBoleto::nossoNumero) {
         setHeader("Nosso Número")
+      }
+      addComponentColumn {dados ->
+        Button().apply {
+          //width = "60px"
+          icon = VaadinIcon.BARCODE.create()
+          addClickListener {
+            if(dados.processado)
+              showBoleto(listOf(dados))
+            else
+              showWarning("Este boleto não foi processado para gera aquivo de remessa")
+          }
+        }
+      }.apply {
+        isAutoWidth = true
       }
       this.setClassNameGenerator {
         null
       }
-      
+  
       this.columns.forEach {
         it.isSortable = false
       }
-      
+  
       viewModel.updateGrid()
     }
   }
   
-  override fun updateGrid(list: List<DadosPagador>) {
+  override fun updateGrid(list: List<DadosBoleto>) {
     dataProviderParcelas.items.clear()
     dataProviderParcelas.items.addAll(list)
     dataProviderParcelas.refreshAll()
@@ -154,12 +169,9 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
     ViewPesquisaParcelas.navigate()
   }
   
-  override fun openText(arquivoStr: String) {
-    val resource = resourceTxt(arquivoStr)
-    val registration = VaadinSession.getCurrent().resourceRegistry.registerResource(resource)
-    UI.getCurrent().page.executeJs("window.open($0, $1)", registration.resourceUri.toString(), "_blank")
-    
-    showBoleto(viewModel.boletosGerados())
+  override fun openText(dadosBoleto: List<DadosBoleto>) {
+    showArquivoRemessa(dadosBoleto)
+    showBoleto(dadosBoleto)
   }
   
   companion object {
