@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
 open class KAppLayoutLeftLayout():
   AppLayoutRouterLayout<LeftResponsiveHybrid?>() {
-
   protected fun layout(title: String = "", icon: String = "",
                        block: (@VaadinDsl AppLayoutBuilder<LeftResponsiveHybrid>).  () -> Unit): LeftResponsiveHybrid {
     val appLayoutBuild = AppLayoutBuilder.get(LeftResponsiveHybrid::class.java)
@@ -45,23 +44,22 @@ open class KAppLayoutLeftLayout():
     return appLayout
   }
   
-  protected fun AppLayoutBuilder<LeftResponsiveHybrid>.bar(block: (@VaadinDsl AppBarBuilder).() -> Unit = {}): FlexLayout {
+  protected fun AppLayoutBuilder<LeftResponsiveHybrid>.bar(version: String,
+                                                           block: (@VaadinDsl AppBarBuilder).() -> Unit = {}):
+    FlexLayout {
     val appBarBuilder = AppBarBuilder.get()
-    val versao = Label("Versão 1.0")
+    val versao = Label("Versão $version")
     versao.textAlign = "center"
     appBarBuilder.add(versao)
-  
+    
     appBarBuilder.block()
     val appBar = appBarBuilder.build()
     withAppBar(appBar)
     return appBar
   }
   
-  protected fun AppLayoutBuilder<LeftResponsiveHybrid>.menu(title: String = "", version: String = "",
-                                                            block: (@VaadinDsl LeftAppMenuBuilder).() -> Unit = {}): LeftMenu {
+  protected fun AppLayoutBuilder<LeftResponsiveHybrid>.menu(block: (@VaadinDsl LeftAppMenuBuilder).() -> Unit = {}): LeftMenu {
     val appMenuBuilder = LeftAppMenuBuilder.get()
-    //    if(title != "")
-    //      appMenuBuilder.addToSection(HEADER, LeftHeaderItem(title, version, null))
     appMenuBuilder.block()
     val appMenu = appMenuBuilder.build() as LeftMenuComponentWrapper
     withAppMenu(appMenu)

@@ -13,7 +13,7 @@ import com.vaadin.flow.server.VaadinSession
 class ViewBoletoHelp {
   companion object {
     private val dadosConvenio = DadosConvenio.CONVENIO_ITAU
-  
+    
     fun showBoleto(dadosBoletos: List<DadosBoleto>) {
       val boleto = BoletoSaci(dadosBoletos, dadosConvenio)
       val pdfBoleto = boleto.geraBoleto()
@@ -22,13 +22,13 @@ class ViewBoletoHelp {
       val registration = VaadinSession.getCurrent().resourceRegistry.registerResource(resourcePDF)
       UI.getCurrent().page.executeJs("window.open($0, $1)", registration.resourceUri.toString(), "_blank")
     }
-  
+    
     fun showArquivoRemessa(dadosBoletos: List<DadosBoleto>) {
       val arquivoRemessa = ArquivoRemessaItau()
       val boletosSaci = BoletoSaci(dadosBoletos, dadosConvenio)
       val boletos = boletosSaci.buildListBoleto()
       val arquivo = arquivoRemessa.buildFile(boletos)
-      val arquivoStr = arquivo.joinToString(separator = "\r\n")
+      val arquivoStr = arquivo.joinToString(separator = "\r\n", prefix = "\r\n")
       val resource = resourceTxt(arquivoStr)
       val registration = VaadinSession.getCurrent().resourceRegistry.registerResource(resource)
       UI.getCurrent().page.executeJs("window.open($0, $1)", registration.resourceUri.toString(), "_blank")
