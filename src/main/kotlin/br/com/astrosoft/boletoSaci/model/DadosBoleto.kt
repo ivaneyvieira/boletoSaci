@@ -16,7 +16,7 @@ data class DadosBoleto(
   var nossoNumero: Int,
   val valorParcela: Double,
   val valorJuros: Double,
-  val dtVencimento: Date,
+  val dtVencimento: Date?,
   val codigo: Int,
   val nome: String,
   val documento: String,
@@ -25,10 +25,14 @@ data class DadosBoleto(
   val cep: String,
   val cidade: String,
   val uf: String,
-  val processado: Boolean
+  val dtProcessamento: LocalDate?
                       ) {
   val chaveERP
     get() = "$storeno-$contrno-$instno"
+  val processado
+    get() = dtProcessamento != null
+  val valorTotal
+    get() = valorParcela + valorJuros
   val boletoEmitido
     get() = nossoNumero > 0
   val descricaoStatus
@@ -52,7 +56,7 @@ data class DadosBoleto(
       .comUf(uf)
   
   fun buildPagador() = Pagador.novoPagador()
-    .comNome(nome)
+    .comNome("$codigo $nome")
     .comDocumento(documento)
     .comEndereco(enderecoPagador)
   

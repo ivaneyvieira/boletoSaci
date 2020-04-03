@@ -1,7 +1,7 @@
 package br.com.astrosoft.boletoSaci.view
 
 import br.com.astrosoft.boletoSaci.model.DadosBoleto
-import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showArquivoRemessa
+import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showArquivoRemessaBrowser
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showBoleto
 import br.com.astrosoft.boletoSaci.viewmodel.IViewModelBoletos
 import br.com.astrosoft.boletoSaci.viewmodel.ViewModelBoletos
@@ -109,26 +109,25 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
       addColumnString(DadosBoleto::nome) {
         setHeader("Nome")
       }
-      addColumnInt(DadosBoleto::storeno) {
-        setHeader("Lj")
-      }
+
       addColumnInt(DadosBoleto::contrno) {
         setHeader("Contrato")
         filterRow.getCell(this)
           .setComponent(edtContrato)
         isAutoWidth = false
       }
-      addColumnInt(DadosBoleto::instno) {
-        setHeader("Pr")
-      }
+  
       addColumnDate(DadosBoleto::localDtVencimento) {
         setHeader("Vencimento")
       }
       addColumnDouble(DadosBoleto::valorParcela) {
         setHeader("Valor")
       }
-      addColumnString(DadosBoleto::descricaoStatus) {
-        setHeader("Situação")
+      addColumnDouble(DadosBoleto::valorJuros) {
+        setHeader("Valor")
+      }
+      addColumnDouble(DadosBoleto::valorTotal) {
+        setHeader("Total")
       }
       addColumnInt(DadosBoleto::nossoNumero) {
         setHeader("Nosso Número")
@@ -170,7 +169,7 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
   }
   
   override fun openText(dadosBoleto: List<DadosBoleto>) {
-    showArquivoRemessa(dadosBoleto)
+    showArquivoRemessaBrowser(dadosBoleto)
     showBoleto(dadosBoleto)
   }
   

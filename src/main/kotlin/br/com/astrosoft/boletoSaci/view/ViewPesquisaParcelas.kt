@@ -54,7 +54,6 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
       setWidthFull()
       edtCodigo = textField("Código") {
         width = "100px"
-        value = "123456"
         tooltip = "Código do cliente"
       }
       edtDoc = textField("CPF/CNPJ") {

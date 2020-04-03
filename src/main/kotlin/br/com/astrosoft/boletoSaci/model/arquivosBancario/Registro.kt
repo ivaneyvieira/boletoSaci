@@ -1,7 +1,5 @@
 package br.com.astrosoft.boletoSaci.model.arquivosBancario
 
-import br.com.astrosoft.framework.util.lpad
-import br.com.astrosoft.framework.util.rpad
 import java.time.LocalDate
 import kotlin.reflect.KProperty1
 
@@ -52,6 +50,7 @@ class Registro<B> {
         print("#### Erro ${field.property.name} $len <> ${value.length} $value")
       value
     }
+    /*
     println()
     println("Linha: $linhaStr")
     fields.forEach {field ->
@@ -61,7 +60,7 @@ class Registro<B> {
       val value = field.readLine(linhaStr)
       println("$campo $pos $fim = '$value'")
     }
-    
+    */
     return linhaStr
   }
 }

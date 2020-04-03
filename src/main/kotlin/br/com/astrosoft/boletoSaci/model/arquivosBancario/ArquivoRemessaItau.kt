@@ -187,7 +187,7 @@ class DetailRetorno(private val sequencia: Long, private val boleto: Boleto, cha
   val dataEmissao: LocalDate? = boleto.datas.processamento.toLocalDate()
   val instrucao1: String = "03"
   val instrucao2: String = "03"
-  val juros1Dia: Double = 0.00
+  val juros1Dia: Double = convenio.jurosMensal.div(30.00)
   val descontoAte: LocalDate? = null
   val valorDesconto: Double = 0.00
   val valorIOF: Double = 0.00
