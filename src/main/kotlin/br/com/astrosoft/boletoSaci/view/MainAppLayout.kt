@@ -2,6 +2,7 @@ package br.com.astrosoft.boletoSaci.view
 
 import br.com.astrosoft.framework.view.KAppLayoutLeftLayout
 import br.com.astrosoft.framework.view.ViewUtil
+import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
@@ -9,6 +10,7 @@ import com.vaadin.flow.server.PWA
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 
+@JsModule("./styles/shared-styles.js")
 @Theme(value = Lumo::class, variant = Lumo.DARK)
 @Push
 @PWA(name = "Boleto Crediário",
@@ -16,6 +18,7 @@ import com.vaadin.flow.theme.lumo.Lumo
      iconPath = "icons/logoPintos.png")
 class MainAppLayout: KAppLayoutLeftLayout(), BeforeEnterObserver {
   val versao = ViewUtil.versao
+  
   init {
     layout("Boleto Saci", "icons/logoPintos.png") {
       bar(versao)

@@ -13,10 +13,18 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun dadosBoletos(): List<DadosBoleto> {
+  fun dadosBoletos(lote: Int): List<DadosBoleto> {
     val sql = "/sql/dadosBoletos.sql"
     return query(sql) {q ->
+      q.addParameter("lote", lote)
       q.executeAndFetch(DadosBoleto::class.java)
+    }
+  }
+  
+  fun lotes(): List<Lote> {
+    val sql = "/sql/lotes.sql"
+    return query(sql) {q ->
+      q.executeAndFetch(Lote::class.java)
     }
   }
   
@@ -65,7 +73,6 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     internal val url = db.url
     internal val username = db.username
     internal val password = db.password
-    internal val test = db.test
     val ipServer =
       url.split("/")
         .getOrNull(2)

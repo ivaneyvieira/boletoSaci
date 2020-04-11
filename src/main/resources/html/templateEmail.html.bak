@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+  </head>
+  <body>
+    <p> Prezado cliente, </p>
+    <p> Para facilitar o pagamento das suas prestações geramos, automaticamente,
+      os boletos das prestações vencidas e a vencer em abril/2020 conforme
+      relacionado abaixo: </p>
+    <table>
+      <colgroup><col width="80"> <col width="60"> <col width="100"> <col width="100">
+        <col width="150"> <col width="150"> </colgroup>
+      <tbody>
+        <tr>
+          <th>Mês</th>
+          <th>Loja</th>
+          <th>Contrato</th>
+          <th>Emissão</th>
+          <th>Vencimento</th>
+          <th>Valor</th>
+          <th>Valor Atualizado</th>
+        </tr>
+        <tr>
+          <td>03/20</td>
+          <td>11</td>
+          <td>110543021</td>
+          <td>04/12/20</td>
+          <td>04/04/20</td>
+          <td>62,35</td>
+          <td>62,35</td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td>62,35</td>
+          <td>62,35</td>
+        </tr>
+        <tr>
+          <td>03/20</td>
+          <td>11</td>
+          <td>110543021</td>
+          <td>04/12/20</td>
+          <td>04/04/20</td>
+          <td>62,35</td>
+          <td>62,35</td>
+        </tr>
+        <tr>
+          <td>03/20</td>
+          <td>11</td>
+          <td>110543021</td>
+          <td>04/12/20</td>
+          <td>04/04/20</td>
+          <td>62,35</td>
+          <td>62,35</td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td>62,35</td>
+          <td>62,35</td>
+        </tr>
+      </tbody>
+    </table>
+    <p> O pagamento poderá ser efetuado nas casas lotéricas ou rede bancária,
+      inclusive pelos aplicativos dos bancos de sua preferência. </p>
+    <p> Caso deseje informações adicionais gentileza responder a esse e-mail. </p>
+  </body>
+</html>

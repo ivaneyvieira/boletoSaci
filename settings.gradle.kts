@@ -9,7 +9,7 @@
 
 rootProject.name = "boletoSaci"
 
-include("rest")
+//include("rest")
 
 pluginManagement {
   repositories {

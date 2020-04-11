@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<p> Prezado cliente, </p>
+<p> Para facilitar o pagamento das suas prestações geramos, automaticamente,
+    os boletos das prestações vencidas e a vencer em abril/2020 conforme
+    relacionado abaixo: </p>
+<table>
+    <colgroup>
+        <col width="80">
+        <col width="60">
+        <col width="100">
+        <col width="100">
+        <col width="160">
+        <col width="160">
+    </colgroup>
+    <tbody>
+    <tr>
+        <th>Mês</th>
+        <th>Loja</th>
+        <th>Contrato</th>
+        <th>Emissão</th>
+        <th>Vencimento</th>
+        <th>Valor</th>
+        <th>Valor Atualizado</th>
+    </tr>
+    <%PARCELAS%>
+    </tbody>
+</table>
+<p> O pagamento poderá ser efetuado nas casas lotéricas ou rede bancária,
+    inclusive pelos aplicativos dos bancos de sua preferência. </p>
+<p> Caso deseje informações adicionais gentileza responder a esse e-mail. </p>
+</body>
+</html>

@@ -17,6 +17,7 @@ data class DadosBoleto(
   val valorParcela: Double,
   val valorJuros: Double,
   val dtVencimento: Date?,
+  val dtEmissao: Date?,
   val codigo: Int,
   val nome: String,
   val documento: String,
@@ -25,7 +26,10 @@ data class DadosBoleto(
   val cep: String,
   val cidade: String,
   val uf: String,
-  val dtProcessamento: LocalDate?
+  val email: String,
+  val dtProcessamento: Date?,
+  val dtVencimentoBoleto: Date?,
+  val numLote: Int
                       ) {
   val chaveERP
     get() = "$storeno-$contrno-$instno"
@@ -33,6 +37,12 @@ data class DadosBoleto(
     get() = dtProcessamento != null
   val valorTotal
     get() = valorParcela + valorJuros
+  val boletoVencido: Boolean
+    get() {
+      val dtProc = dtProcessamento ?: return false
+      val dtVenc = dtVencimento ?: return false
+      return dtProc.after(dtVenc)
+    }
   val boletoEmitido
     get() = nossoNumero > 0
   val descricaoStatus
