@@ -47,6 +47,7 @@ dependencies {
   implementation("eu.vaadinonkotlin:vok-framework-v10-vokdb:$vaadinonkotlin_version")
   // Vaadin 14
   implementation("com.vaadin:vaadin-core:$vaadin10_version")
+  implementation("com.vaadin:vaadin-spring-boot-starter:$vaadin10_version")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
   
   implementation("com.zaxxer:HikariCP:3.4.1")
@@ -94,5 +95,11 @@ dependencies {
 vaadin {
   if(gradle.startParameter.taskNames.contains("stage")) {
     productionMode = true
+  }
+}
+
+dependencyManagement {
+  imports {
+    mavenBom("com.vaadin:vaadin-bom:$vaadin10_version")
   }
 }

@@ -85,12 +85,3 @@ class GmailAuthenticator(val username: String, val password: String): Authentica
     return PasswordAuthentication(username, password)
   }
 }
-
-fun main() {
-  val home = System.getenv("HOME")
-  val fileName = System.getenv("EBEAN_PROPS") ?: "$home/ebean.pintos.properties"
-  System.setProperty("ebean.props.file", fileName)
-  val gmail = Gmail()
-  gmail.sendMail("ivaneyvieira@gmail.com", "Email HTML", "<h1>Hello Java Mail \n ABC123</h1>",
-                 "/home/ivaneyvieira/Downloads/subwolf.pdf")
-}

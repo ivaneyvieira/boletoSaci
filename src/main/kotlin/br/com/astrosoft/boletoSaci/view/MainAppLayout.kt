@@ -1,7 +1,7 @@
 package br.com.astrosoft.boletoSaci.view
 
+import br.com.astrosoft.AppConfig.Companion.loginInfo
 import br.com.astrosoft.framework.view.KAppLayoutLeftLayout
-import br.com.astrosoft.framework.view.ViewUtil
 import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.router.BeforeEnterEvent
@@ -17,11 +17,9 @@ import com.vaadin.flow.theme.lumo.Lumo
      shortName = "Boleto Saci",
      iconPath = "icons/logoPintos.png")
 class MainAppLayout: KAppLayoutLeftLayout(), BeforeEnterObserver {
-  val versao = ViewUtil.versao
-  
   init {
-    layout("Boleto Saci", "icons/logoPintos.png") {
-      bar(versao)
+    layout(loginInfo.appName, loginInfo.iconPath) {
+      bar(loginInfo.version)
       menu {
         section("Boleto") {
           itemMenu(ViewBoletos::class)
