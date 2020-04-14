@@ -4,6 +4,16 @@ import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
 
 class QuerySaci: QueryDB(driver, url, username, password) {
+  fun findUser(login: String?): UserSaci? {
+    login ?: return null
+    val sql = "/sql/userSenha.sql"
+    return query(sql) {q ->
+      q.addParameter("login", login)
+      q.executeAndFetch(UserSaci::class.java)
+        .firstOrNull()
+    }
+  }
+  
   fun dadosPagador(loja: Int, contrato: Int): List<DadosBoleto> {
     val sql = "/sql/dadosPagador.sql"
     return query(sql) {q ->
@@ -13,10 +23,18 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun dadosBoletos(): List<DadosBoleto> {
+  fun dadosBoletos(lote: Int): List<DadosBoleto> {
     val sql = "/sql/dadosBoletos.sql"
     return query(sql) {q ->
+      q.addParameter("lote", lote)
       q.executeAndFetch(DadosBoleto::class.java)
+    }
+  }
+  
+  fun lotes(): List<Lote> {
+    val sql = "/sql/lotes.sql"
+    return query(sql) {q ->
+      q.executeAndFetch(Lote::class.java)
     }
   }
   
@@ -32,13 +50,13 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     val sql = "/sql/proximoNumero.sql"
     return query(sql) {q ->
       val numero = q.executeScalarList(Int::class.java)
-        .firstOrNull() ?: 10000000
+                     .firstOrNull() ?: 10000000
       if(numero == 0) 10000000
       else numero
     } + 1
   }
   
-  fun localizaContratos(codigo: Int, documento : String): List<DadosContratos> {
+  fun localizaContratos(codigo: Int, documento: String): List<DadosContratos> {
     val sql = "/sql/localizaContratos.sql"
     return query(sql) {q ->
       q.addParameter("codigo", codigo)
@@ -47,7 +65,7 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun updateParcela(loja: Int, contrato: Int, parcela: Int, nossoNumero: Int, processado : Boolean) {
+  fun updateParcela(loja: Int, contrato: Int, parcela: Int, nossoNumero: Int, processado: Boolean) {
     val sql = "/sql/updateParcela.sql"
     script(sql) {q ->
       q.addParameter("loja", loja)
@@ -65,7 +83,6 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     internal val url = db.url
     internal val username = db.username
     internal val password = db.password
-    internal val test = db.test
     val ipServer =
       url.split("/")
         .getOrNull(2)
@@ -73,3 +90,5 @@ class QuerySaci: QueryDB(driver, url, username, password) {
 }
 
 val saci = QuerySaci()
+
+class UserSaci(val no: Int?, val name: String?, val storeno: Int?, val login: String?, val senha: String?)

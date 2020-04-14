@@ -16,8 +16,12 @@ abstract class Field<B, T>(val pos: Int, val len: Int, val property: KProperty1<
     return toStr(value)
   }
   
-  fun readLine(linha: String): T? {
+  fun readLineValue(linha: String): T? {
     return toValue(linha.mid(pos - 1, len))
+  }
+  
+  fun readLine(linha: String): String? {
+    return linha.mid(pos - 1, len)
   }
   
   abstract fun toValue(str: String?): T?

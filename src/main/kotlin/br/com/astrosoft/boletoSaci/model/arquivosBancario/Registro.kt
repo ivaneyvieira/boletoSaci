@@ -43,13 +43,25 @@ class Registro<B> {
   }
   
   fun line(bean: B): String {
-    return fields.joinToString(separator = "") {field ->
+    val linhaStr = fields.joinToString(separator = "") {field ->
       val value = field.line(bean)
       val len = field.len
       if(len != value.length)
         print("#### Erro ${field.property.name} $len <> ${value.length} $value")
       value
     }
+    /*
+    println()
+    println("Linha: $linhaStr")
+    fields.forEach {field ->
+      val campo = field.property.name.rpad(30, " ")
+      val pos = field.pos.toString().lpad(4, " ")
+      val fim = (field.pos + field.len - 1) .toString().lpad(4, " ")
+      val value = field.readLine(linhaStr)
+      println("$campo $pos $fim = '$value'")
+    }
+    */
+    return linhaStr
   }
 }
 

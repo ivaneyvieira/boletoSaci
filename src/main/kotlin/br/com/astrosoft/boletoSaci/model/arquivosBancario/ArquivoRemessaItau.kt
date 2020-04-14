@@ -9,7 +9,6 @@ import br.com.caelum.stella.boleto.Boleto
 import br.com.caelum.stella.boleto.Pagador
 import br.com.caelum.stella.boleto.bancos.Bancos
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class ArquivoRemessaItau: Arquivo<HeaderRetorno, DetailRetorno, TrailerRetorno>() {
   init {
@@ -161,59 +160,45 @@ class DetailRetorno(private val sequencia: Long, private val boleto: Boleto, cha
   private val pagador: Pagador = boleto.pagador
   private val convenio: DadosConvenio = CONVENIO_ITAU
   val tipoRegistro = 1L
-  val codigoInscricao = 1L
-  val numeroInscricao =
-    pagador.documento.replace("/", "")
-      .replace("-", "")
-      .replace(".", "")
-      .toLongOrNull() ?: 0L
-  val agencia = convenio.agencia.toLongOrNull() ?: 0L
+  val codigoInscricao = 2L
+  val numeroInscricao = beneficiario.documento.toNumber()
+  val agencia = convenio.agencia.toNumber()
   val zeros = 0L
-  val conta = convenio.codigo.toLongOrNull() ?: 0L
-  val dac = convenio.digitoCodigo.toLongOrNull() ?: 0L
+  val conta = convenio.codigo.toNumber()
+  val dac = convenio.digitoCodigo.toNumber()
   val brancos1: String = ""
   val instrucaoAlegacao: Long = 0L
   val usoEmpresa: String = chaveERP
   val nossoNumero =
     banco.banco.getNossoNumeroFormatado(boleto.beneficiario)
-      .toLongOrNull() ?: 0L
+      .toNumber()
   val qtdeMoeda = 0.00
-  val numeroCarteira = convenio.carteira.toLongOrNull() ?: 0L
+  val numeroCarteira = convenio.carteira.toNumber()
   val usoBanco: String = ""
   val carteira: String = "I"
   val codigoOcorrencia = 1L
   val numeroDocumento: String = boleto.numeroDoDocumento
-  val dataVencimento: LocalDate =
-    LocalDateTime.ofInstant(boleto.datas.vencimento.toInstant(),
-                            boleto.datas.vencimento.timeZone
-                              .toZoneId())
-      .toLocalDate()
+  val dataVencimento: LocalDate? = boleto.datas.vencimento.toLocalDate()
   val valorTitulo: Double = boleto.valorBoleto.toDouble()
-  val codigoBanco = banco.numeroDoBanco.toLongOrNull() ?: 0L
+  val codigoBanco = banco.numeroDoBanco.toNumber()
   val agenciaCobradora = 0L
   val especie: String = "01"
   val aceite: String = if(boleto.aceite) "S" else "N"
   val dataEmissao: LocalDate? = boleto.datas.processamento.toLocalDate()
   val instrucao1: String = "03"
   val instrucao2: String = "03"
-  val juros1Dia: Double = 0.00
+  val juros1Dia: Double = convenio.jurosMensal.div(30.00)
   val descontoAte: LocalDate? = null
   val valorDesconto: Double = 0.00
   val valorIOF: Double = 0.00
   val abatimento: Double = 0.00
   val codigoInscricaoPagador = 1L
-  val numeroInscricaoPagador =
-    boleto.pagador.documento.replace("/", "")
-      .replace("-", "")
-      .replace(".", "")
-      .toLongOrNull()
+  val numeroInscricaoPagador = boleto.pagador.documento.toNumber()
   val nome: String = boleto.pagador.nome
   val brancos2: String = ""
   val lougadouro: String = boleto.pagador.endereco.logradouro
   val bairro: String = boleto.pagador.endereco.bairro
-  val cep =
-    boleto.pagador.endereco.cep.replace("-", "")
-      .toLongOrNull()
+  val cep = boleto.pagador.endereco.cep.toNumber()
   val cidade: String = boleto.pagador.endereco.cidade
   val estado: String = boleto.pagador.endereco.uf
   val nomeSacadorAvalista: String = ""
@@ -222,6 +207,14 @@ class DetailRetorno(private val sequencia: Long, private val boleto: Boleto, cha
   val prazo = 30L
   val brancos4: String = ""
   val numeroSequancial = sequencia
+}
+
+fun String.toNumber(): Long {
+  val chars =
+    this.toCharArray()
+      .filter {it.isDigit()}
+  return chars.joinToString("")
+           .toLongOrNull() ?: 0L
 }
 
 class TrailerRetorno(private val sequencia: Long) {

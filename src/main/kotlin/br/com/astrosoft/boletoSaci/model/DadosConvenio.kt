@@ -1,6 +1,5 @@
 package br.com.astrosoft.boletoSaci.model
 
-import br.com.astrosoft.framework.util.lpad
 import br.com.caelum.stella.boleto.Banco
 import br.com.caelum.stella.boleto.Beneficiario
 import br.com.caelum.stella.boleto.Endereco
@@ -59,6 +58,6 @@ data class DadosConvenio(
                                       digitoNossoNumero = "",
                                       banco = BANCO_ITAU,
                                       dadosBeneficiario = dadosBeneficiario,
-                                      jurosMensal = 0.0)
+                                      jurosMensal = 7.9)
   }
 }

@@ -54,7 +54,6 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
       setWidthFull()
       edtCodigo = textField("Código") {
         width = "100px"
-        value = "123456"
         tooltip = "Código do cliente"
       }
       edtDoc = textField("CPF/CNPJ") {
@@ -102,14 +101,15 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
       addColumnInt(DadosBoleto::contrno) {
         setHeader("Contrato")
       }
-      addColumnInt(DadosBoleto::instno) {
-        setHeader("Parcela")
-      }
       addColumnDate(DadosBoleto::localDtVencimento) {
         setHeader("Vencimento")
       }
+  
       addColumnDouble(DadosBoleto::valorParcela) {
         setHeader("Valor")
+      }
+      addColumnDouble(DadosBoleto::valorTotal) {
+        setHeader("Valor Total")
       }
       addColumnString(DadosBoleto::descricaoStatus) {
         setHeader("Situação")
@@ -175,7 +175,7 @@ class ViewPesquisaParcelas: IViewPesquisaParcelas, ViewLayout<ViewModelPesquisaP
   }
   
   override fun imprimeBoletos(dadosBoletos: List<DadosBoleto>) {
-    ViewBoletoHelp.showBoleto(dadosBoletos)
+    ViewBoletoHelp.showBoletoBrowser(dadosBoletos)
   }
   
   private fun setValorTotal(valor: Double) {

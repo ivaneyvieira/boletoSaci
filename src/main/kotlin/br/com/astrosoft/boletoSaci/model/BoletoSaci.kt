@@ -16,7 +16,7 @@ class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: Dad
     .comInstrucoes(* dadosConvenio.instrucoes)
     .comLocaisDePagamento(* dadosConvenio.locaisPagamento)
     .comPagador(dadosBoleto.buildPagador())
-    .comValorBoleto(dadosBoleto.valorParcela)
+    .comValorBoleto(dadosBoleto.valorTotal)
     .comEspecieDocumento("DMI")
     .comNumeroDoDocumento(dadosBoleto.numeroDocumento)
   

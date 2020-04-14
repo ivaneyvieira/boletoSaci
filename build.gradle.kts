@@ -2,16 +2,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val vaadinonkotlin_version = "0.8.1"
 val vaadin10_version = "14.1.21"
+val kotlin_version = "1.3.71"
+val spring_boot_version = "2.1.0.RELEASE"
 
 plugins {
-  kotlin("jvm") version "1.3.61"
+  id("org.springframework.boot") version "2.2.6.RELEASE"
+  id("io.spring.dependency-management") version "1.0.9.RELEASE"
+  kotlin("jvm") version "1.3.71"
   id("org.gretty") version "3.0.1"
   war
   id("com.vaadin") version "0.6.0"
+  kotlin("plugin.spring") version "1.3.71"
 }
 
+
 defaultTasks("clean", "vaadinBuildFrontend", "build")
-//defaultTasks("clean", "build")
 
 repositories {
   mavenCentral()
@@ -25,6 +30,8 @@ gretty {
   contextPath = "/"
   servletContainer = "jetty9.4"
 }
+
+
 val staging by configurations.creating
 
 tasks.withType<KotlinCompile> {
@@ -32,16 +39,15 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
+  //Spring
+  implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.session:spring-session-core")
+  providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
   // Vaadin-on-Kotlin dependency, includes Vaadin
   implementation("eu.vaadinonkotlin:vok-framework-v10-vokdb:$vaadinonkotlin_version")
   // Vaadin 14
-  implementation("com.vaadin:vaadin-core:$vaadin10_version") //{
-  // Webjars are only needed when running in Vaadin 13 compatibility mode
-  //    listOf("com.vaadin.webjar", "org.webjars.bowergithub.insites",
-  //           "org.webjars.bowergithub.polymer", "org.webjars.bowergithub.polymerelements",
-  //           "org.webjars.bowergithub.vaadin", "org.webjars.bowergithub.webcomponents")
-  //      .forEach {exclude(group = it)}
-  //  }
+  implementation("com.vaadin:vaadin-core:$vaadin10_version")
+  implementation("com.vaadin:vaadin-spring-boot-starter:$vaadin10_version")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
   
   implementation("com.zaxxer:HikariCP:3.4.1")
@@ -69,9 +75,9 @@ dependencies {
   // https://mvnrepository.com/artifact/br.com.caelum.stella/caelum-stella-boleto
   compile("br.com.caelum.stella:caelum-stella-boleto:2.1.3")
   compile("br.com.caelum.stella:caelum-stella-core:2.1.3")
-  
+  //
   implementation("net.sf.jasperreports:jasperreports:6.12.2")
-  implementation("net.sourceforge.barbecue:barbecue:1.1")
+  implementation("net.sourceforge.barbecue:barbecue")
   implementation("com.lowagie:itext:2.1.7")
   //Util
   implementation("org.sql2o:sql2o:1.6.0")
@@ -82,10 +88,18 @@ dependencies {
   implementation("org.cups4j:cups4j:0.7.6")
   // heroku app runner
   //staging("com.github.jsimone:webapp-runner-main:9.0.27.1")
+  // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+  compile("com.sun.mail:javax.mail:1.6.2")
 }
 
 vaadin {
   if(gradle.startParameter.taskNames.contains("stage")) {
     productionMode = true
+  }
+}
+
+dependencyManagement {
+  imports {
+    mavenBom("com.vaadin:vaadin-bom:$vaadin10_version")
   }
 }

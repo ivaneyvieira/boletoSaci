@@ -75,8 +75,18 @@ fun LocalDateTime?.format(): String {
 }
 
 fun Date?.format(): String? {
+  return this.format(DATE_PATTERN)
+}
+
+fun Date?.format(datePattern: String): String? {
   if(this == null) return null
-  val sdf = SimpleDateFormat(DATE_PATTERN)
+  val sdf = SimpleDateFormat(datePattern)
+  return sdf.format(this)
+}
+
+fun Date?.nomeMes(): String? {
+  if(this == null) return null
+  val sdf = SimpleDateFormat("MMM")
   return sdf.format(this)
 }
 

@@ -1,6 +1,7 @@
 SELECT users.no,
        users.name,
        login,
+       auxLong1                                                                           AS storeno,
        cast(concat(CHAR(ascii(SUBSTRING(pswd, 1, 1)) + ascii('e') - ascii('j')),
                    CHAR(ascii(SUBSTRING(pswd, 2, 1)) + ascii('a') - ascii('h')),
                    CHAR(ascii(SUBSTRING(pswd, 3, 1)) + ascii('c') - ascii('k')),
@@ -8,11 +9,6 @@ SELECT users.no,
                    CHAR(ascii(SUBSTRING(pswd, 5, 1)) + ascii(' ') - ascii('B')),
                    CHAR(ascii(SUBSTRING(pswd, 6, 1)) + ascii(' ') - ascii(')')),
                    CHAR(ascii(SUBSTRING(pswd, 7, 1)) + ascii(' ') - ascii(')')),
-                   CHAR(ascii(SUBSTRING(pswd, 8, 1)) + ascii(' ') - ascii('-'))) AS CHAR) AS senha,
-       usergr.name                                                                        AS grupo
+                   CHAR(ascii(SUBSTRING(pswd, 8, 1)) + ascii(' ') - ascii('-'))) AS CHAR) AS senha
 FROM users
-  LEFT JOIN usergu
-              ON users.no = usergu.userno
-  LEFT JOIN usergr
-              ON usergr.no = usergu.usergrno
-GROUP BY users.no;
+WHERE login = :login

@@ -8,3 +8,12 @@
  */
 
 rootProject.name = "boletoSaci"
+
+//include("rest")
+
+pluginManagement {
+  repositories {
+    jcenter()
+    gradlePluginPortal()
+  }
+}

@@ -1,11 +1,13 @@
 package br.com.astrosoft.framework.util
 
+import java.text.DecimalFormat
+
 fun String?.lpad(size: Int, filler: String): String {
   var str = this ?: ""
   if(str.length > size) return str.substring(0, size)
   val buf = StringBuilder(str)
   while(buf.length < size) buf.insert(0, filler)
-
+  
   str = buf.toString()
   return str
 }
@@ -49,15 +51,13 @@ fun String.mid(start: Int): String {
 fun parameterNames(sql: String): List<String> {
   val regex = Regex(":([a-zA-Z0-9_]+)")
   val matches = regex.findAll(sql)
-  return matches.map {it.groupValues}.toList().flatten().filter {!it.startsWith(":")}
+  return matches.map {it.groupValues}
+    .toList()
+    .flatten()
+    .filter {!it.startsWith(":")}
 }
-/*
-@Suppress("UNCHECKED_CAST")
-fun readInstanceProperty(instance: Any, propertyName: String): Any? {
-  val property = instance::class.memberProperties
-    // don't cast here to <Any, R>, it would succeed silently
-    .firstOrNull {it.name == propertyName} as? KProperty1<Any, *>
-  // force a invalid cast exception if incorrect type here
-  return property?.get(instance)
+
+fun Double.format(): String {
+  val df = DecimalFormat("#,##0.00")
+  return df.format(this)
 }
-*/
