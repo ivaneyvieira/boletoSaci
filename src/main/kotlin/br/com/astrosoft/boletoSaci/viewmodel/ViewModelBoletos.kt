@@ -27,6 +27,7 @@ class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(vi
   
   fun lotes(): List<Lote> {
     return saci.lotes()
+      .sortedByDescending {it.dtProcessamento}
   }
   
   val dadosBoleto: List<DadosBoleto>

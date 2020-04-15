@@ -50,7 +50,7 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
   init {
     horizontalLayout {
       setWidthFull()
-      cmbLote = comboBox<Lote>("Lote") {
+      cmbLote = comboBox("Lote") {
         setItems(viewModel.lotes())
         isAllowCustomValue = false
         this.setItemLabelGenerator {

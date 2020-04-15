@@ -1,11 +1,15 @@
 package br.com.astrosoft.boletoSaci.spring
 
-import br.com.astrosoft.AppConfig.Companion.loginInfo
 import com.vaadin.flow.component.login.LoginForm
 import com.vaadin.flow.component.login.LoginI18n
 import com.vaadin.flow.component.login.LoginI18n.Header
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-class LoginFormApp(): LoginForm() {
+@Component
+class LoginFormApp: LoginForm() {
+  @Autowired
+  lateinit var loginInfo: LoginInfo
   
   init {
     setI18n()
