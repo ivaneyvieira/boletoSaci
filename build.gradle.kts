@@ -15,7 +15,6 @@ plugins {
   kotlin("plugin.spring") version "1.3.71"
 }
 
-
 defaultTasks("clean", "vaadinBuildFrontend", "build")
 
 repositories {
@@ -30,7 +29,6 @@ gretty {
   contextPath = "/"
   servletContainer = "jetty9.4"
 }
-
 
 val staging by configurations.creating
 
@@ -93,9 +91,7 @@ dependencies {
 }
 
 vaadin {
-  if(gradle.startParameter.taskNames.contains("stage")) {
-    productionMode = true
-  }
+  productionMode = false
 }
 
 dependencyManagement {
