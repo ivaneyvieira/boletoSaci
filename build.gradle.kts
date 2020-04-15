@@ -91,9 +91,7 @@ dependencies {
 }
 
 vaadin {
-  if(gradle.startParameter.taskNames.contains("stage")) {
-    productionMode = true
-  }
+  productionMode = false
 }
 
 dependencyManagement {
