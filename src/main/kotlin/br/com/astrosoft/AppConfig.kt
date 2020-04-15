@@ -1,8 +1,5 @@
 package br.com.astrosoft
-
-import br.com.astrosoft.boletoSaci.spring.LoginFormApp
-import br.com.astrosoft.framework.view.ViewUtil
-
+/*
 class AppConfig {
   private val versao = ViewUtil.versao
   private val title = "Boleto Crediário"
@@ -19,5 +16,4 @@ class AppConfig {
     val loginFormApp get() = instance.loginFormApp()
   }
 }
-
-open class LoginInfo(val appName: String, val shortName: String, val version: String, val iconPath: String)
+*/
