@@ -19,10 +19,12 @@ data class DadosConvenio(
   val dadosBeneficiario: DadosBeneficiario,
   val jurosMensal: Double
                         ) {
-  val instrucoes
-    get() = arrayOf("APÓS O VENCIMENTO COBRAR JUROS DE $jurosFormatado AO MES",
-                    "APÓS 30 DIAS DO VENCIMENTO CONTATE NOSSO",
-                    "SETOR DE COBRANÇA TELEFONE/WHATSAPP 86 2107-4000")
+  fun instrucoes(parcela: String) = arrayOf(
+                                            "APÓS O VENCIMENTO COBRAR JUROS DE $jurosFormatado AO MES",
+                                            "APÓS 30 DIAS DO VENCIMENTO CONTATE NOSSO SETOR",
+                                            "DE COBRANÇA TELEFONE/WHATSAPP 86 2107-4000 ($parcela)"
+                                           )
+  
   private val jurosFormatado: String
     get() {
       val format = DecimalFormat("#,##0.00")
@@ -31,7 +33,7 @@ data class DadosConvenio(
   val locaisPagamento
     get() = arrayOf("EM QUALQUER BANCO OU CORRESP. BANCARIO MESMO APOS O VENCIMENTO")
   
-  fun buildBeneficiario(nossoNumero : Int) = Beneficiario.novoBeneficiario()
+  fun buildBeneficiario(nossoNumero: Int) = Beneficiario.novoBeneficiario()
     .comNomeBeneficiario(dadosBeneficiario.nome)
     .comAgencia(agencia)
     .comDigitoAgencia(digitoAgencia)
@@ -42,7 +44,8 @@ data class DadosConvenio(
     .comEndereco(endereco)
     .comNossoNumero("$nossoNumero")
     .comDigitoNossoNumero(banco.geradorDeDigito
-                            .geraDigitoMod10("$agencia$codigo$carteira$nossoNumero").toString())
+                            .geraDigitoMod10("$agencia$codigo$carteira$nossoNumero")
+                            .toString())
     .comDocumento(dadosBeneficiario.documento)
   
   companion object {

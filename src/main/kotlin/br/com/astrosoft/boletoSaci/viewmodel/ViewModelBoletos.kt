@@ -44,10 +44,11 @@ class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(vi
     }
       .map {(agrupamento, boletos) ->
         DadosBoleto(
-          storeno = 0,
-          contrno = boletos.map {it.contrno}
-                      .max() ?: 0,
-          instno = 0,
+          storeno = if(boletos.size == 1) boletos.firstOrNull()?.storeno ?: 0 else 0,
+          contrno = if(boletos.size == 1) boletos.firstOrNull()?.contrno ?: 0
+          else boletos.map {it.contrno}
+                 .max() ?: 0,
+          instno = if(boletos.size == 1) boletos.firstOrNull()?.instno ?: 0 else 0,
           statusParcela = 0,
           statusContrato = 0,
           nossoNumero = agrupamento.nossoNumero,

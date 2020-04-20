@@ -13,7 +13,7 @@ class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: Dad
     .comDatas(dadosBoleto.buildDatas())
     .comBanco(dadosConvenio.banco)
     .comBeneficiario(dadosConvenio.buildBeneficiario(nossoNumero))
-    .comInstrucoes(* dadosConvenio.instrucoes)
+    .comInstrucoes(* dadosConvenio.instrucoes(dadosBoleto.chaveERP))
     .comLocaisDePagamento(* dadosConvenio.locaisPagamento)
     .comPagador(dadosBoleto.buildPagador())
     .comValorBoleto(dadosBoleto.valorTotal)

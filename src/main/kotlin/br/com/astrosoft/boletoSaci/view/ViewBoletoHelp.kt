@@ -30,7 +30,7 @@ class ViewBoletoHelp {
         .forEach {(codigo, dados) ->
           arquivoBoleto(numLote, dados.firstOrNull()?.codigo, dados.firstOrNull()?.nome)?.let {nomeDoArquivo ->
             println("Gravando arquivo $nomeDoArquivo ...")
-            gravaArquivoBoleto(nomeDoArquivo, dados.sortedBy {it.nossoNumero})
+            gravaArquivoBoleto(nomeDoArquivo, dados.sortedWith(compareBy ({it.storeno}, {it.contrno}, {it.instno})))
           }
         }
     }
@@ -124,7 +124,7 @@ class ViewBoletoHelp {
     
       arquivoBoleto(numLote, codigoCliente, nome)?.let {arquivoPDF ->
         val gmail = Gmail()
-        val result = gmail.sendMail(email, "Solicitação de boleto - Lojas Pintos", msgHtml, arquivoPDF)
+        val result = gmail.sendMail(email, "Solicitação - Lojas Pintos", msgHtml, arquivoPDF)
         if(result)
           gravaLog("$codigoCliente\t$nome\t$arquivoPDF\t$email\t$numLote")
         else
