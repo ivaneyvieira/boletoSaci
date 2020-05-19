@@ -4,6 +4,7 @@ import br.com.astrosoft.boletoSaci.model.DadosBoleto
 import br.com.astrosoft.boletoSaci.model.Lote
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.codigosEnviados
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.enviarEmail
+import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.enviarEmailSite
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.gravaArquivoBoleto
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.gravaArquivoRemessa
 import br.com.astrosoft.boletoSaci.view.ViewBoletoHelp.Companion.showBoletoBrowser
@@ -89,6 +90,19 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
             codigosNaoEnviados.forEach {codigo ->
               lote?.numLote?.let {numLote ->
                 enviarEmail(numLote, codigo)
+              }
+            }
+          }
+        }
+        button("Envia E-mail Site") {
+          icon = VaadinIcon.ENVELOPE.create()
+          onLeftClick {
+            val codigosCliente =
+              viewModel.dadosBoleto.map {it.codigo}
+                .distinct()
+            codigosCliente.forEach {codigo ->
+              lote?.numLote?.let {numLote ->
+                enviarEmailSite(numLote, codigo)
               }
             }
           }
@@ -217,7 +231,7 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
   override fun openText(dadosBoleto: List<DadosBoleto>) {
     lote?.numLote?.let {numLote ->
       gravaArquivoRemessa(numLote, dadosBoleto)
-      gravaArquivoBoleto(numLote, dadosBoleto)
+      gravaArquivoBoleto(numLote, dadosBoleto, emptyArray())
     }
   }
   

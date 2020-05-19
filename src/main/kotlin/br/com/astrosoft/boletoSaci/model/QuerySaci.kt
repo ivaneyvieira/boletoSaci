@@ -77,6 +77,14 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
+  fun boletosFuncionario(numLote : Int) : List<BoletoFuncionario> {
+    val sql = "/sql/boletoFuncionario.sql"
+    return query(sql) {q ->
+      q.addParameter("numLote", numLote)
+      q.executeAndFetch(BoletoFuncionario::class.java)
+    }
+  }
+  
   companion object {
     private val db = DB("saci")
     internal val driver = db.driver

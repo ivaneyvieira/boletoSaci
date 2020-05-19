@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
 
 class Gmail {
-  fun sendMail(to: String, subject: String, htmlMessage: String, filename: String): Boolean {
+  fun sendMail(to: String, subject: String, htmlMessage: String, filename: String? = null): Boolean {
     val username = ConfigFile.usernameMail
     val password = ConfigFile.passwordMail
     val prop = Properties()
@@ -36,18 +36,20 @@ class Gmail {
       message.setFrom(InternetAddress(username))
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to))
       message.subject = subject
+      val multPart = MimeMultipart()
       //Text
       val partText = MimeBodyPart()
       partText.dataHandler = DataHandler((HTMLDataSource(htmlMessage)))
-      //File
-      val partFile = MimeBodyPart()
-      val fileDataSource = FileDataSource(filename)
-      partFile.dataHandler = DataHandler(fileDataSource)
-      partFile.fileName = fileDataSource.getName()
-      //MultPart
-      val multPart = MimeMultipart()
       multPart.addBodyPart(partText)
-      multPart.addBodyPart(partFile)
+      //File
+      if(filename != null) {
+        val partFile = MimeBodyPart()
+        val fileDataSource = FileDataSource(filename)
+        partFile.dataHandler = DataHandler(fileDataSource)
+        partFile.fileName = fileDataSource.name
+        multPart.addBodyPart(partFile)
+      }
+
       message.setContent(multPart)
       
       Transport.send(message)
