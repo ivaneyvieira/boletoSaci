@@ -8,7 +8,7 @@ SELECT P.storeno,
        (P.instamt - P.paidamt) / 100               AS valorParcela,
        P.l4                                        AS nossoNumero,
        TRUNCATE(if(20200321 > duedate, ((P.instamt - P.paidamt) / 100) *
-                                       (DATEDIFF(20200321, duedate) * ((7.90 / 30) / 100)), 0.00),
+                                       (DATEDIFF(20200321, duedate) * ((0.26) / 100)), 0.00),
                 2)                                 AS valorJuros,
        CT.no                                       AS codigo,
        CT.name                                     AS nome,

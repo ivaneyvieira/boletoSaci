@@ -8,17 +8,24 @@ import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto
 import java.io.FileInputStream
 import java.nio.file.Paths
 
-class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: DadosConvenio) {
-  fun buildBoleto(dadosBoleto: DadosBoleto, nossoNumero: Int) = Boleto.novoBoleto()
-    .comDatas(dadosBoleto.buildDatas())
-    .comBanco(dadosConvenio.banco)
-    .comBeneficiario(dadosConvenio.buildBeneficiario(nossoNumero))
-    .comInstrucoes(* dadosConvenio.instrucoes)
-    .comLocaisDePagamento(* dadosConvenio.locaisPagamento)
-    .comPagador(dadosBoleto.buildPagador())
-    .comValorBoleto(dadosBoleto.valorTotal)
-    .comEspecieDocumento("DMI")
-    .comNumeroDoDocumento(dadosBoleto.numeroDocumento)
+class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: DadosConvenio,
+                 val instrucoes: Array<String> = emptyArray()) {
+  fun buildBoleto(dadosBoleto: DadosBoleto, nossoNumero: Int): Boleto {
+    val instrucaoPar = if(instrucoes.isEmpty())
+      dadosConvenio.instrucoes(dadosBoleto.chaveERP)
+    else
+      instrucoes
+    return Boleto.novoBoleto()
+      .comDatas(dadosBoleto.buildDatas())
+      .comBanco(dadosConvenio.banco)
+      .comBeneficiario(dadosConvenio.buildBeneficiario(nossoNumero))
+      .comInstrucoes(*  instrucaoPar)
+      .comLocaisDePagamento(* dadosConvenio.locaisPagamento)
+      .comPagador(dadosBoleto.buildPagador())
+      .comValorBoleto(dadosBoleto.valorTotal)
+      .comEspecieDocumento("DMI")
+      .comNumeroDoDocumento(dadosBoleto.numeroDocumento)
+  }
   
   fun buildGerador(): GeradorDeBoleto {
     val boletos = buildListBoleto().map {it.boleto}

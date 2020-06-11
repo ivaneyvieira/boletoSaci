@@ -7,12 +7,17 @@ import br.com.astrosoft.framework.util.format
 object TemplateMail {
   private val arquivo = SystemUtils.readFile("/html/templateEmail.html") ?: ""
   
+  private val arquivoSite = SystemUtils.readFile("/html/templateEmailSite.html") ?: ""
+  
   fun corpoEmailHTML(codigo: Int, boletosCliente: List<DadosBoleto>): String {
     val contratos = boletosCliente.groupBy {!it.boletoVencido}
     val tableHtmlContratos = tableHtmlContrato(contratos)
     return arquivo.replace("<%PARCELAS%>", tableHtmlContratos)
   }
   
+  fun corpoEmailSiteHTML(): String {
+    return arquivoSite
+  }
   private fun tableHtmlContrato(contratos: Map<Boolean, List<DadosBoleto>>): String {
     return contratos.entries.joinToString(separator = "\n") {dados ->
       dados.value.sortedBy {it.dtVencimento}

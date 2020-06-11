@@ -23,18 +23,18 @@ import java.time.LocalDate
 class ViewBoletoHelp {
   companion object {
     private val dadosConvenio = DadosConvenio.CONVENIO_ITAU
-  
-    fun gravaArquivoBoleto(numLote: Int, dadosBoletos: List<DadosBoleto>) {
+    
+    fun gravaArquivoBoleto(numLote: Int, dadosBoletos: List<DadosBoleto>, instrucoes : Array<String>) {
       dadosBoletos.sortedBy {it.codigo}
         .groupBy {it.codigo}
         .forEach {(codigo, dados) ->
           arquivoBoleto(numLote, dados.firstOrNull()?.codigo, dados.firstOrNull()?.nome)?.let {nomeDoArquivo ->
             println("Gravando arquivo $nomeDoArquivo ...")
-            gravaArquivoBoleto(nomeDoArquivo, dados.sortedBy {it.nossoNumero})
+            gravaArquivoBoleto(nomeDoArquivo, dados.sortedWith(compareBy({it.storeno}, {it.contrno}, {it.instno})), instrucoes)
           }
         }
     }
-  
+    
     private fun arquivoBoleto(numLote: Int, codigo: Int?, nome: String?): String? {
       codigo ?: return null
       nome ?: return null
@@ -43,12 +43,12 @@ class ViewBoletoHelp {
         .lpad(6, "0")
       return "$dir/$codigoStr - $nome.pdf"
     }
-  
-    private fun gravaArquivoBoleto(filename: String, dadosBoletos: List<DadosBoleto>) {
-      val boleto = BoletoSaci(dadosBoletos, dadosConvenio)
+    
+    private fun gravaArquivoBoleto(filename: String, dadosBoletos: List<DadosBoleto>, instrucoes : Array<String>) {
+      val boleto = BoletoSaci(dadosBoletos, dadosConvenio, instrucoes)
       val pdfBoleto = boleto.geraBoleto()
       val file = File(filename)
-    
+      
       try {
         val os: OutputStream = FileOutputStream(file)
         os.write(pdfBoleto)
@@ -57,7 +57,7 @@ class ViewBoletoHelp {
         e.printStackTrace()
       }
     }
-  
+    
     fun showBoletoBrowser(dadosBoletos: List<DadosBoleto>) {
       val boleto = BoletoSaci(dadosBoletos, dadosConvenio)
       val pdfBoleto = boleto.geraBoleto()
@@ -66,22 +66,23 @@ class ViewBoletoHelp {
       val registration = VaadinSession.getCurrent().resourceRegistry.registerResource(resourcePDF)
       UI.getCurrent().page.executeJs("window.open($0, $1)", registration.resourceUri.toString(), "_blank")
     }
-  
+    
     fun gravaArquivoRemessa(numLote: Int, dadosBoletos: List<DadosBoleto>) {
       val diretorioLote = diretorioLote(numLote)
       File(diretorioLote).mkdirs()
       val filename = "$diretorioLote/${arquivoRemessa(numLote)}"
       gravaArquivoRemessa(filename, dadosBoletos)
     }
-  
+    
     private fun diretorioLote(numLote: Int): String {
-      val dir = "/home/ivaneyvieira/Insync/ivaney@pintos.com.br/Google Drive/boletoPintos"
+      //val dir = "/home/ivaneyvieira/Insync/ivaney@pintos.com.br/Google Drive/boletoPintos"
+      val dir = "/home/ivaneyvieira/Insync/ivaney@pintos.com.br/Google Drive"
       val loteStr =
         numLote.toString()
           .lpad(2, "0")
       return "$dir/lote$loteStr"
     }
-  
+    
     private fun arquivoRemessa(numLote: Int): String {
       val date = LocalDate.now()
       val ano = (date.year - 2020).toString()
@@ -96,15 +97,15 @@ class ViewBoletoHelp {
           .lpad(2, "0")
       return "a$ano$mes$dia$lote.txt"
     }
-  
-    fun gravaArquivoRemessa(filename: String, dadosBoletos: List<DadosBoleto>) {
+    
+    private fun gravaArquivoRemessa(filename: String, dadosBoletos: List<DadosBoleto>) {
       val arquivoRemessa = ArquivoRemessaItau()
       val boletosSaci = BoletoSaci(dadosBoletos, dadosConvenio)
       val boletos = boletosSaci.buildListBoleto()
       val arquivo = arquivoRemessa.buildFile(boletos)
       val arquivoStr = arquivo.joinToString(separator = "\r\n", postfix = "\r\n")
       val file = File(filename)
-    
+      
       try {
         val os: OutputStream = FileOutputStream(file)
         os.write(arquivoStr.toByteArray())
@@ -113,7 +114,7 @@ class ViewBoletoHelp {
         e.printStackTrace()
       }
     }
-  
+    
     fun enviarEmail(numLote: Int, codigoCliente: Int) {
       val boletosCliente =
         saci.dadosBoletos(numLote)
@@ -121,22 +122,37 @@ class ViewBoletoHelp {
       val msgHtml = TemplateMail.corpoEmailHTML(codigoCliente, boletosCliente)
       val nome = boletosCliente.firstOrNull()?.nome
       val email = boletosCliente.firstOrNull()?.email ?: ""
-    
+      
       arquivoBoleto(numLote, codigoCliente, nome)?.let {arquivoPDF ->
         val gmail = Gmail()
-        val result = gmail.sendMail(email, "Solicitação de boleto - Lojas Pintos", msgHtml, arquivoPDF)
+        val result = gmail.sendMail(email, "Solicitação - Lojas Pintos", msgHtml, arquivoPDF)
         if(result)
           gravaLog("$codigoCliente\t$nome\t$arquivoPDF\t$email\t$numLote")
         else
           gravaLog("E$codigoCliente\t$nome\t$arquivoPDF\t$email\t$numLote")
       }
     }
-  
+    
+    fun enviarEmailSite(numLote: Int, codigoCliente: Int) {
+      val boletosCliente =
+        saci.dadosBoletos(numLote)
+          .filter {codigoCliente == it.codigo}
+      val msgHtml = TemplateMail.corpoEmailSiteHTML()
+      val nome = boletosCliente.firstOrNull()?.nome
+      val email = boletosCliente.firstOrNull()?.email ?: ""
+      val gmail = Gmail()
+      val result = gmail.sendMail(email, "Pagamento de Carnê - Lojas Pintos", msgHtml)
+      if(result)
+        gravaLog("$codigoCliente\t$nome\t\t$email\t$numLote")
+      else
+        gravaLog("E$codigoCliente\t$nome\t\t$email\t$numLote")
+    }
+    
     private fun gravaLog(logText: String) {
       val arquivo = "/home/ivaneyvieira/logEmail.txt"
       Files.write(Paths.get(arquivo), "$logText\n".toByteArray(), StandardOpenOption.APPEND)
     }
-  
+    
     fun codigosEnviados(): List<Int> {
       val arquivo = "/home/ivaneyvieira/logEmail.txt"
       return File(arquivo).bufferedReader()
@@ -149,4 +165,22 @@ class ViewBoletoHelp {
         .distinct()
     }
   }
+}
+
+fun main() {
+  val home = System.getenv("HOME")
+  val fileName = System.getenv("EBEAN_PROPS") ?: "$home/ebean.pintos.properties"
+  System.setProperty("ebean.props.file", fileName)
+  val lote = 22
+  val dadosBoleto =
+    saci.boletosFuncionario(lote)
+      .map {
+        it.dadosBoleto
+      }
+  val instrucoes =  arrayOf(
+  "APÓS O VENCIMENTO COBRAR JUROS DE 7,90 AO MES",
+  "REFERENTE PLANO DE SAÚDE/ODONTOLÓGICO ABRIL/2020"
+  )
+  ViewBoletoHelp.gravaArquivoRemessa(lote, dadosBoleto)
+  ViewBoletoHelp.gravaArquivoBoleto(lote, dadosBoleto, instrucoes)
 }
