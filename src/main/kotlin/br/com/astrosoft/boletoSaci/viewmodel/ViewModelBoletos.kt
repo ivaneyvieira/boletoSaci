@@ -31,14 +31,13 @@ class ViewModelBoletos(view: IViewModelBoletos): ViewModel<IViewModelBoletos>(vi
     return list
   }
   
-  val dadosBoleto: List<DadosBoleto>
-    get() {
-      val lote = view.lote ?: return emptyList()
-      return saci.dadosBoletos(lote.numLote)
-    }
+  fun dadosBoleto(): List<DadosBoleto> {
+    val lote = view.lote ?: return emptyList()
+    return saci.dadosBoletos(lote.numLote)
+  }
   
   fun boletosGerados(): List<DadosBoleto> {
-    val boletos = dadosBoleto
+    val boletos = dadosBoleto()
     val boletosAgrupados = boletos.groupBy {
       AgrupamentoBoleto(it.codigo, it.nossoNumero)
     }

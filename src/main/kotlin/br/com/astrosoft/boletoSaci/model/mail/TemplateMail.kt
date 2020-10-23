@@ -33,8 +33,8 @@ object TemplateMail {
                         <td style="text-align: right;">${dados.valorTotal.format()}</td>
                     </tr>
       """.trimIndent()
-        } + "\n" +
-      linhaTotal(dados.value, "Total Parcial", dados.value.size > 1)
+        } //+ "\n" +
+      //linhaTotal(dados.value, "Total Parcial", dados.value.size > 1)
     } + "\n" +
            linhaTotal(contratos.values.flatten(), "Total Geral", contratos.values.flatten().size > 1)
   }

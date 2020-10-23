@@ -121,11 +121,11 @@ class ViewBoletoHelp {
           .filter {codigoCliente == it.codigo}
       val msgHtml = TemplateMail.corpoEmailHTML(codigoCliente, boletosCliente)
       val nome = boletosCliente.firstOrNull()?.nome
-      val email = boletosCliente.firstOrNull()?.email ?: ""
+      val email = "ivaney@pintos.com.br"//boletosCliente.firstOrNull()?.email ?: ""
       
       arquivoBoleto(numLote, codigoCliente, nome)?.let {arquivoPDF ->
         val gmail = Gmail()
-        val result = gmail.sendMail(email, "Solicitação - Lojas Pintos", msgHtml, arquivoPDF)
+        val result = gmail.sendMail(email, "Parcela(s) Loja Pintos", msgHtml, arquivoPDF)
         if(result)
           gravaLog("$codigoCliente\t$nome\t$arquivoPDF\t$email\t$numLote")
         else
@@ -139,7 +139,7 @@ class ViewBoletoHelp {
           .filter {codigoCliente == it.codigo}
       val msgHtml = TemplateMail.corpoEmailSiteHTML()
       val nome = boletosCliente.firstOrNull()?.nome
-      val email = boletosCliente.firstOrNull()?.email ?: ""
+      val email = "ivaney@pintos.com.br"//boletosCliente.firstOrNull()?.email ?: ""
       val gmail = Gmail()
       val result = gmail.sendMail(email, "Pagamento de Carnê - Lojas Pintos", msgHtml)
       if(result)
@@ -171,15 +171,16 @@ fun main() {
   val home = System.getenv("HOME")
   val fileName = System.getenv("EBEAN_PROPS") ?: "$home/ebean.pintos.properties"
   System.setProperty("ebean.props.file", fileName)
-  val lote = 22
+  val lote = 26
+  val vencimento = LocalDate.of(2020, 10, 26)
   val dadosBoleto =
     saci.boletosFuncionario(lote)
       .map {
-        it.dadosBoleto
+        it.dadosBoleto(vencimento)
       }
   val instrucoes =  arrayOf(
   "APÓS O VENCIMENTO COBRAR JUROS DE 7,90 AO MES",
-  "REFERENTE PLANO DE SAÚDE/ODONTOLÓGICO ABRIL/2020"
+  "REEMBOLSO PLANO SAÚDE"
   )
   ViewBoletoHelp.gravaArquivoRemessa(lote, dadosBoleto)
   ViewBoletoHelp.gravaArquivoBoleto(lote, dadosBoleto, instrucoes)

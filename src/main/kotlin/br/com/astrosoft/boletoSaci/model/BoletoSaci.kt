@@ -12,7 +12,7 @@ class BoletoSaci(val listDadosPagador: List<DadosBoleto>, val dadosConvenio: Dad
                  val instrucoes: Array<String> = emptyArray()) {
   fun buildBoleto(dadosBoleto: DadosBoleto, nossoNumero: Int): Boleto {
     val instrucaoPar = if(instrucoes.isEmpty())
-      dadosConvenio.instrucoes(dadosBoleto.chaveERP)
+      dadosConvenio.instrucoes(dadosBoleto.chaveBoleto)
     else
       instrucoes
     return Boleto.novoBoleto()

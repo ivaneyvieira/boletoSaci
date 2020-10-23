@@ -83,7 +83,7 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
           icon = VaadinIcon.ENVELOPE.create()
           onLeftClick {
             val codigosCliente =
-              viewModel.dadosBoleto.map {it.codigo}
+              viewModel.dadosBoleto().map {it.codigo}
                 .distinct()
             val codigosEnviados = codigosEnviados()
             val codigosNaoEnviados = codigosCliente - codigosEnviados
@@ -98,7 +98,7 @@ class ViewBoletos: IViewModelBoletos, ViewLayout<ViewModelBoletos>() {
           icon = VaadinIcon.ENVELOPE.create()
           onLeftClick {
             val codigosCliente =
-              viewModel.dadosBoleto.map {it.codigo}
+              viewModel.dadosBoleto().map {it.codigo}
                 .distinct()
             codigosCliente.forEach {codigo ->
               lote?.numLote?.let {numLote ->

@@ -33,6 +33,8 @@ data class DadosBoleto(
                       ) {
   val chaveERP
     get() = "$storeno-$contrno-$instno"
+  val chaveBoleto
+    get() = "$contrno-$instno"
   val processado
     get() = dtProcessamento != null
   val valorTotal

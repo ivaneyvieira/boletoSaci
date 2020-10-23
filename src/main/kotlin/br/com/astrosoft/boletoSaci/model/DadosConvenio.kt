@@ -22,7 +22,7 @@ data class DadosConvenio(
   fun instrucoes(parcela: String) = arrayOf(
                                             "APÓS O VENCIMENTO COBRAR JUROS DE $jurosFormatado AO MES",
                                             "APÓS 30 DIAS DO VENCIMENTO CONTATE NOSSO SETOR",
-                                            "DE COBRANÇA TELEFONE/WHATSAPP 86 2107-4000 ($parcela)"
+                                            "DE COBRANÇA 86 2107-4000. CONTRATO/PARCELA($parcela)"
                                            )
   
   private val jurosFormatado: String

@@ -3,9 +3,11 @@ package br.com.astrosoft.boletoSaci.model.arquivosBancario
 import br.com.astrosoft.framework.util.lpad
 import br.com.astrosoft.framework.util.mid
 import br.com.astrosoft.framework.util.rpad
+import java.text.Normalizer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.regex.*
 import kotlin.math.pow
 import kotlin.math.roundToLong
 import kotlin.reflect.KProperty1
@@ -30,12 +32,12 @@ abstract class Field<B, T>(val pos: Int, val len: Int, val property: KProperty1<
 
 class FieldAlfanumerico<B>(pos: Int, len: Int, property: KProperty1<B, String>): Field<B, String>(pos, len, property) {
   override fun toValue(str: String?): String? {
-    return str?.trim() ?: ""
+    return str?.trim().deAccent() ?: ""
   }
   
   override fun toStr(value: String?): String {
     value ?: return "".rpad(len, "0")
-    return value.rpad(len, " ")
+    return value.rpad(len, " ").deAccent()
   }
 }
 
@@ -82,4 +84,11 @@ class FieldDate<B>(pos: Int, property: KProperty1<B, LocalDate?>): Field<B, Loca
     value ?: return "0".lpad(len, "0")
     return value.format(formatDate)
   }
+}
+
+fun String?.deAccent(): String {
+  val nfdNormalizedString: String = Normalizer.normalize(this, Normalizer.Form.NFD)
+  val pattern: Pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+  return pattern.matcher(nfdNormalizedString)
+    .replaceAll("") ?: ""
 }

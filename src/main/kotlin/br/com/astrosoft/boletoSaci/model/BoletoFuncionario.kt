@@ -17,8 +17,7 @@ class BoletoFuncionario(
   val cidade: String,
   val uf: String
                        ) {
-  val dadosBoleto
-    get() = DadosBoleto(
+  fun dadosBoleto(dataVencimento : LocalDate)= DadosBoleto(
       storeno = 1,
       contrno = nossoNumero,
       instno = numLote,
@@ -27,8 +26,7 @@ class BoletoFuncionario(
       nossoNumero = nossoNumero,
       valorParcela = valor,
       valorJuros = 0.00,
-      dtVencimento = LocalDate.of(2020, 5, 25)
-        .toDate(),
+      dtVencimento = dataVencimento.toDate(),
       dtEmissao = LocalDate.now()
         .toDate(),
       codigo = codigo,

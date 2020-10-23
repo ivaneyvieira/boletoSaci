@@ -1,23 +1,40 @@
-SELECT cast(nossoNumero * 1 AS UNSIGNED) AS nossoNumero,
-       X.storeno                         AS loja,
-       X.contrno                         AS contrato,
-       X.instno                          AS parcela,
-       nome                              AS nome,
-       chave                             AS chave,
-       documento                         AS documento,
-       cast(
-	   CONCAT('20', MID(dtOcorrencia, 5, 2), MID(dtOcorrencia, 3, 2), MID(dtOcorrencia, 1, 2)) *
-	   1 AS DATE)                    AS dtOcorrencia,
-       cast(
-	   CONCAT('20', MID(R.vencimento, 5, 2), MID(R.vencimento, 3, 2), MID(R.vencimento, 1, 2)) *
-	   1 AS DATE)                    AS vencimento,
-       (taxa + principal) * 1 / 100      AS valor,
-       R.taxa * 1 / 100                  AS taxa,
-       R.juros * 1 / 100                 AS juros,
-       R.desconto * 1 / 100              AS desconto
-FROM bi.retornoBanco       AS R
-  INNER JOIN sqldados.itxa AS X
-	       ON X.l4 = R.nossoNumero
-WHERE ocorrencia = '06'
-HAVING dtOcorrencia * 1 >= 20200427
-ORDER BY dtOcorrencia;
+SELECT P.storeno,
+       P.contrno,
+       P.instno,
+       P.status                                    AS statusParcela,
+       I.status                                    AS statusContrato,
+       cast(P.duedate AS DATE)                     AS dtVencimento,
+       cast(I.date AS DATE)                        AS dtEmissao,
+       (P.instamt - P.paidamt) / 100               AS valorParcela,
+       P.l4                                        AS nossoNumero,
+        CASE
+         WHEN duedate >= current_date*1
+           THEN 0/100
+         WHEN duedate < 20200322
+           THEN TRUNCATE((instamt - paidamt) * ((DATEDIFF(20200322, duedate) + DATEDIFF(current_date*1, 20200802)) * (0.0026)), 0)/100
+         WHEN duedate BETWEEN 20200322 AND 20200802
+           THEN TRUNCATE((instamt - paidamt) * (DATEDIFF(current_date*1, 20200802) * (0.0026)), 0)/100
+         WHEN duedate > 20200802
+           THEN TRUNCATE((instamt - paidamt) * ((DATEDIFF(current_date*1, duedate)) * (0.0026)), 0)/100
+       END                                         AS valorJuros,
+       CT.no                                       AS codigo,
+       CT.name                                     AS nome,
+       CT.cpf_cgc                                  AS documento,
+       CT.add1                                     AS endereco,
+       CT.nei1                                     AS bairro,
+       TRIM(MID(CT.zip, 1, 10))                    AS cep,
+       CT.city1                                    AS cidade,
+       CT.state1                                   AS uf,
+       IFNULL(C3.auxString7, '')                   AS email,
+       if(P.c1 = '', NULL, cast(P.c1 * 1 AS DATE)) AS dtProcessamento,
+       cast(20201031 AS DATE)                     AS dtVencimentoBoleto,
+       P.s4                                        AS numLote
+FROM sqldados.itxa   AS P
+  INNER JOIN inst    AS I
+               USING (storeno, contrno)
+  INNER JOIN custp   AS CT
+               ON I.custno = CT.no
+  LEFT JOIN  ctmore3 AS C3
+               USING (custno)
+WHERE P.l4 <> 0 /*Nosso número*/
+  AND P.s4 = :lote
